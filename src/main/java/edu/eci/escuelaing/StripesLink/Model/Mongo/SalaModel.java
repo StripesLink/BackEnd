@@ -35,4 +35,13 @@ public class SalaModel {
 	public void setTableros(List<Tablero> tableros) {
 		this.tableros = tableros;
 	}
+
+	public List<String> getUsersId() {
+		return usersId;
+	}
+
+	public void setUsersId(List<String> usersId) {
+		this.usersId = usersId;
+	}
+	
 }

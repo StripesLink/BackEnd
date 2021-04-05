@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
 import edu.eci.escuelaing.StripesLink.Model.User;
+import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
 
 public interface IStripesLinkService {
@@ -14,5 +15,7 @@ public interface IStripesLinkService {
 
 	public String createSala(); 
 	
-	public List<SalaModel> getAllSalas();
+	public List<UserSalaResponse> getAllSalas();
+
+	void AddUserSala(String idSala) throws StripesLinkException;
 }

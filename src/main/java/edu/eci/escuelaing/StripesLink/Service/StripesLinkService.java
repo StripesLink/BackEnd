@@ -2,15 +2,21 @@ package edu.eci.escuelaing.StripesLink.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +24,7 @@ import edu.eci.escuelaing.StripesLink.Controllers.UserController;
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
 import edu.eci.escuelaing.StripesLink.Model.Tablero;
 import edu.eci.escuelaing.StripesLink.Model.User;
+import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaRepository;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.UserModel;
@@ -43,15 +50,15 @@ public class StripesLinkService implements IStripesLinkService {
 	@Autowired
 	private JwtUtils jwtUtils;
 
-	//LOAD SALAS PUBLICAS
-	/*public StripesLinkService() {
-		List<SalaModel> salas = getAllSalas();
+	@PostConstruct
+	public void seedData() {
+		List<UserSalaResponse> salas = getAllSalas();
 		if (salas.size() < 1) {
 			for (int i = 0; i < 10; i++) {
 				createSala();
 			}
 		}
-	}*/
+	}
 
 	@Override
 	public void createUser(AuthenticationRequest authenticationRequest) throws StripesLinkException {
@@ -97,8 +104,27 @@ public class StripesLinkService implements IStripesLinkService {
 	}
 
 	@Override
-	public List<SalaModel> getAllSalas() {
-		return salaRepository.findAll();
+	public List<UserSalaResponse> getAllSalas() {
+		List<SalaModel> salas = salaRepository.findAll();
+		List<UserSalaResponse> salasDOM = new ArrayList<UserSalaResponse>();
+		salas.forEach((x) -> salasDOM.add(new UserSalaResponse(x.getId(), x.getUsersId().size())));
+		return salasDOM;
+	}
+
+	@Override
+	public void AddUserSala(String idSala) throws StripesLinkException {
+		Optional<SalaModel> m = salaRepository.findById(idSala);
+		if (m.isPresent()) {
+			SalaModel sala = m.get();
+			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			System.out.println("-------------" + userDetails.getUsername());
+			UserModel user = userRepository.findByUsername(userDetails.getUsername());
+			sala.getUsersId().add(user.getId());
+			salaRepository.save(sala);
+		} else {
+			throw new StripesLinkException("Sala no existe");
+		}
 	}
 
 }

@@ -2,21 +2,20 @@ package edu.eci.escuelaing.StripesLink.Model;
 
 public class BaseResponse {
 
-	private String response;
+	private String res;
 
 	public BaseResponse() {
 	}
 
-	public BaseResponse(String response) {
-		this.response = response;
+	public BaseResponse(String res) {
+		this.res = res;
 	}
 
 	public String getResponse() {
-		return response;
+		return res;
 	}
 
-	public void setResponse(String response) {
-		this.response = response;
+	public void setResponse(String res) {
+		this.res = res;
 	}
-
 }
