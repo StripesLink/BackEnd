@@ -20,10 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import edu.eci.escuelaing.StripesLink.Controllers.UserController;
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
 import edu.eci.escuelaing.StripesLink.Model.Tablero;
-import edu.eci.escuelaing.StripesLink.Model.User;
 import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaRepository;
@@ -118,8 +116,10 @@ public class StripesLinkService implements IStripesLinkService {
 			SalaModel sala = m.get();
 			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			System.out.println("-------------" + userDetails.getUsername());
 			UserModel user = userRepository.findByUsername(userDetails.getUsername());
+			System.out.println("-------------" + userDetails.getUsername());
+			if (sala.getUsersId().contains(user.getId()))
+				throw new StripesLinkException("Usuario ya esta en esta sala");
 			sala.getUsersId().add(user.getId());
 			salaRepository.save(sala);
 		} else {

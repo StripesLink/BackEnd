@@ -29,7 +29,6 @@ import edu.eci.escuelaing.StripesLink.Security.UserService;
 import edu.eci.escuelaing.StripesLink.Service.IStripesLinkService;
 import edu.eci.escuelaing.StripesLink.Service.StripesLinkException;
 
-@CrossOrigin(origins = "*")
 @RestController
 public class UserController {
 	@Autowired

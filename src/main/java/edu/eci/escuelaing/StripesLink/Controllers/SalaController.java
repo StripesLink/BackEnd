@@ -24,7 +24,7 @@ import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
 import edu.eci.escuelaing.StripesLink.Service.IStripesLinkService;
 import edu.eci.escuelaing.StripesLink.Service.StripesLinkException;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 public class SalaController {
 
