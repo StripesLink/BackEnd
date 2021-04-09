@@ -31,30 +31,46 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtFilterRequest jwtFilterRequest;
 
+	private static final String[] AUTH_SWAGGER_ENDPOINTS = {
+	        "/swagger-resources/**",
+	        "/swagger-ui.html",
+	        "/v2/api-docs",
+	        "/webjars/**"
+	};
+	
+	private static final String[] AUTH_ENDPOINTS = {
+	        "/createUser",
+	        "/login"
+	        ,"/swagger-ui.html",
+	        "/v2/api-docs",
+	};
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userService);
 	}
-
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers("/createUser", "/login").permitAll().anyRequest()
-				.authenticated().and().cors().configurationSource(corsConfigurationSource());
+		http.csrf().disable().authorizeRequests()
+				.antMatchers(AUTH_SWAGGER_ENDPOINTS).permitAll()
+				.antMatchers(AUTH_ENDPOINTS).permitAll()
+				.anyRequest().authenticated().and().cors().configurationSource(corsConfigurationSource());
 
 		http.addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);
 	}
-	
-	CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedMethod(HttpMethod.GET);
-        configuration.addAllowedMethod(HttpMethod.PUT);
-        configuration.addAllowedMethod(HttpMethod.POST);
-        configuration.addAllowedMethod(HttpMethod.DELETE);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
-        return source;
-    }
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.addAllowedMethod(HttpMethod.GET);
+		configuration.addAllowedMethod(HttpMethod.PUT);
+		configuration.addAllowedMethod(HttpMethod.POST);
+		configuration.addAllowedMethod(HttpMethod.DELETE);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
+		return source;
+	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
