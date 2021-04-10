@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
+import edu.eci.escuelaing.StripesLink.Model.Point;
 import edu.eci.escuelaing.StripesLink.Model.Tablero;
 import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
@@ -121,6 +122,32 @@ public class StripesLinkService implements IStripesLinkService {
 			if (sala.getUsersId().contains(user.getId()))
 				throw new StripesLinkException("Usuario ya esta en esta sala");
 			sala.getUsersId().add(user.getId());
+			salaRepository.save(sala);
+		} else {
+			throw new StripesLinkException("Sala no existe");
+		}
+	}
+
+	@Override
+	public List<Point> getPointsSala(String idSala, int tablero) throws StripesLinkException {
+		Optional<SalaModel> m = salaRepository.findById(idSala);
+		if (m.isPresent()) {
+			SalaModel sala = m.get();
+			List<Point> puntos = sala.getTableros().get(tablero).getPuntos();
+			if (puntos == null)
+				throw new StripesLinkException("La sala no tiene puntos");
+			return puntos;
+		} else {
+			throw new StripesLinkException("Sala no existe");
+		}
+	}
+
+	@Override
+	public void newPointSala(String idSala, Point pt, int tablero) throws StripesLinkException {
+		Optional<SalaModel> m = salaRepository.findById(idSala);
+		if (m.isPresent()) {
+			SalaModel sala = m.get();
+			sala.getTableros().get(tablero).getPuntos().add(pt);
 			salaRepository.save(sala);
 		} else {
 			throw new StripesLinkException("Sala no existe");

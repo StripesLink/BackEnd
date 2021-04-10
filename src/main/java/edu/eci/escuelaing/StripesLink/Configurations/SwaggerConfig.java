@@ -23,19 +23,6 @@ public class SwaggerConfig {
 				.apis(RequestHandlerSelectors.basePackage("edu.eci.escuelaing.StripesLink.Controllers"))
 				.paths(PathSelectors.any())
 				.build()
-				.apiInfo(getApiInfo());
-	}
-	
-	private ApiInfo getApiInfo() {
-		return new ApiInfo(
-				"StripesLinkAPI",
-				null,
-				"1.0",
-				null,
-				null,
-				null,
-				null,
-				Collections.emptyList()
-				);
+				.apiInfo(ApiInfo.DEFAULT);
 	}
 }
