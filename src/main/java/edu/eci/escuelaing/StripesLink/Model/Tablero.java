@@ -12,12 +12,15 @@ public class Tablero {
 	public String status;
 
 	public List<String> usersId;
+	
+	public int currentUser;
 
 	public Tablero(String color) {
 		this.color = color;
 		puntos = new ArrayList();
 		usersId = new ArrayList();
 		status = "Created";
+		currentUser=0;
 	}
 
 	public String getColor() {
@@ -47,8 +50,19 @@ public class Tablero {
 	public List<String> getUsersId() {
 		return usersId;
 	}
-
+	
 	public void setUsersId(List<String> usersId) {
 		this.usersId = usersId;
 	}
+
+	public int getCurrentUser() {
+		return currentUser;
+	}
+
+	public void setCurrentUser(int currentUser) {
+		this.currentUser = currentUser;
+	}
+	
+
+	
 }

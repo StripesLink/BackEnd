@@ -163,6 +163,40 @@ public class StripesLinkService implements IStripesLinkService {
 		} else
 			throw new StripesLinkException("Sala no existe");
 	}
+	
+	@Override
+	public String getPintorSala(String idSala, String equipo) throws StripesLinkException {
+		Optional<SalaModel> m = salaRepository.findById(idSala);
+		String pintor=null;
+		if (m.isPresent()) {
+			SalaModel sala = m.get();
+			 List<Tablero> tableros=sala.getTableros();
+			 int posTablero=0 ;
+			 for (int i=0;i<tableros.size();i++){ 
+				if ( tableros.get(i).getColor() == equipo){
+					posTablero=i;
+					break;	
+				}	 
+			 }
+			if (tableros.get(posTablero) == null){
+				throw new StripesLinkException("Tablero no existe");	
+			}
+			
+			List<String> usuarios =tableros.get(posTablero).getUsersId();
+			int current=tableros.get(posTablero).getCurrentUser();
+			if (current == usuarios.size()-1){
+				tableros.get(posTablero).setCurrentUser(0);
+				pintor=tableros.get(posTablero).getUsersId().get(current);	
+			}else{
+				
+				pintor=tableros.get(posTablero).getUsersId().get(current);
+				tableros.get(posTablero).setCurrentUser(current+1);
+			}
+			sala.setTableros(tableros);
+			salaRepository.save(sala);
+		}
+			return pintor;
+	}
 
 	@Override
 	public void newPointSala(String idSala, Point pt, int tablero) throws StripesLinkException {

@@ -60,4 +60,14 @@ public class SalaController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/getPintorSala")
+	private ResponseEntity<?> getPintorSala(@RequestParam String idSala) {
+		try {
+			return ResponseEntity.ok(service.getPointsSala(idSala));
+		} catch (StripesLinkException e) {
+			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
 }
