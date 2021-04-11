@@ -1,6 +1,8 @@
 package edu.eci.escuelaing.StripesLink.Configurations;
 
-import java.util.List;
+
+
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -18,7 +19,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import edu.eci.escuelaing.StripesLink.Model.Mongo.UserRepository;
 import edu.eci.escuelaing.StripesLink.Security.JwtFilterRequest;
 import edu.eci.escuelaing.StripesLink.Security.UserService;
 
@@ -40,9 +40,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	private static final String[] AUTH_ENDPOINTS = {
 	        "/createUser",
-	        "/login"
-	        ,"/swagger-ui.html",
-	        "/v2/api-docs",
+	        "/login",
+	        "/connectSocket/**",
+	        "/connectSocket",
+	        "/connectSocket/info"
 	};
 	
 	@Override
@@ -55,18 +56,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().authorizeRequests()
 				.antMatchers(AUTH_SWAGGER_ENDPOINTS).permitAll()
 				.antMatchers(AUTH_ENDPOINTS).permitAll()
-				.anyRequest().authenticated().and().cors().configurationSource(corsConfigurationSource());
+				.anyRequest().authenticated()
+				.and().cors().configurationSource(corsConfigurationSource());
 
 		http.addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);
 	}
-
+	
+	
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.addAllowedMethod(HttpMethod.GET);
-		configuration.addAllowedMethod(HttpMethod.PUT);
-		configuration.addAllowedMethod(HttpMethod.POST);
-		configuration.addAllowedMethod(HttpMethod.DELETE);
-
+		configuration.setAllowedMethods(Arrays.asList("POST, PUT, GET, OPTIONS, DELETE"));
+        configuration.setAllowCredentials(false);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
 		return source;
