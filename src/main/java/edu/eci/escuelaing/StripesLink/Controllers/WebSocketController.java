@@ -21,17 +21,11 @@ public class WebSocketController {
 	@Autowired
 	IStripesLinkService persistence;
 
-	@MessageMapping("/newPoint.{idSala}")
-	public void handlePointEvent(Point pt, int numtablero, @DestinationVariable String idSala) throws Exception {
+	@MessageMapping("/newPoints.{idSala}.{equipo}")
+	public void handlePointEvent(List<Point> pts, @DestinationVariable String idSala,
+			@DestinationVariable String equipo) throws Exception {
 		System.out.println("Nueva conexion a la sala:" + idSala);
-		persistence.newPointSala(idSala, pt, numtablero);
-		msgt.convertAndSend("/topic/newSala.{idSala}", pt);
-	}
-
-	@MessageMapping("/newSala.{idSala}")
-	public void handleSalaEvent(int numtablero, @DestinationVariable String idSala) throws Exception {
-		System.out.println("Nueva conexion a la sala:" + idSala);
-		System.out.println(persistence.getPointsSala(idSala, numtablero));
-		msgt.convertAndSend("/topic/newSala." + idSala, persistence.getPointsSala(idSala, numtablero));
+		persistence.addPoints(idSala, pts);
+		msgt.convertAndSend("/topic/newSala." + idSala + "." + equipo, pts);
 	}
 }

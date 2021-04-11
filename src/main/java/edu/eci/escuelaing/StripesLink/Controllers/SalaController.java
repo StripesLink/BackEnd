@@ -44,19 +44,17 @@ public class SalaController {
 	@PutMapping("/addUserSala")
 	private ResponseEntity<?> addUserSala(@RequestParam String idSala) {
 		try {
-			service.AddUserSala(idSala);
-			return new ResponseEntity<>(HttpStatus.CREATED);
+			return new ResponseEntity<>(new BaseResponse(service.AddUserSala(idSala)), HttpStatus.CREATED);
 		} catch (StripesLinkException e) {
 			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-
 	}
 
 	@GetMapping("/getPointsSala")
-	private ResponseEntity<?> getPointSalas(@RequestParam String idSala, @RequestParam int numTablero) {
+	private ResponseEntity<?> getPointSalas(@RequestParam String idSala) {
 		try {
-			return ResponseEntity.ok(service.getPointsSala(idSala, numTablero));
+			return ResponseEntity.ok(service.getPointsSala(idSala));
 		} catch (StripesLinkException e) {
 			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

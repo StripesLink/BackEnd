@@ -11,17 +11,20 @@ public class Tablero {
 
 	public String status;
 
+	public List<String> usersId;
+
 	public Tablero(String color) {
 		this.color = color;
 		puntos = new ArrayList();
+		usersId = new ArrayList();
 		status = "Created";
 	}
 
-	public String getNumero() {
+	public String getColor() {
 		return color;
 	}
 
-	public void setNumero(String color) {
+	public void setColor(String color) {
 		this.color = color;
 	}
 
@@ -41,4 +44,11 @@ public class Tablero {
 		this.status = status;
 	}
 
+	public List<String> getUsersId() {
+		return usersId;
+	}
+
+	public void setUsersId(List<String> usersId) {
+		this.usersId = usersId;
+	}
 }

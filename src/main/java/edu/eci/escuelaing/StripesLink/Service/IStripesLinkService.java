@@ -18,9 +18,11 @@ public interface IStripesLinkService {
 	
 	public List<UserSalaResponse> getAllSalas();
 
-	void AddUserSala(String idSala) throws StripesLinkException;
+	String AddUserSala(String idSala) throws StripesLinkException;
 
-	List<Point> getPointsSala(String idSala, int tablero) throws StripesLinkException;
+	Object getPointsSala(String idSala) throws StripesLinkException;
 
 	void newPointSala(String idSala, Point pt, int tablero) throws StripesLinkException;
+
+	public void addPoints(String idSala, List<Point> pts) throws StripesLinkException;
 }

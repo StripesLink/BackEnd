@@ -18,6 +18,8 @@ public class SalaModel {
 	private List<Tablero> tableros;
 
 	private List<String> usersId;
+	
+	private int currentTablero = 0;
 
 	public SalaModel(List<Tablero> tableros) {
 		this.tableros = tableros;
@@ -43,5 +45,12 @@ public class SalaModel {
 	public void setUsersId(List<String> usersId) {
 		this.usersId = usersId;
 	}
-	
+
+	public int getCurrentTablero() {
+		return currentTablero;
+	}
+
+	public void setCurrentTablero(int currentTablero) {
+		this.currentTablero = currentTablero;
+	}
 }

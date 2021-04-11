@@ -42,11 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	private static final String[] AUTH_ENDPOINTS = {
 	        "/createUser",
-	        "/login",
-	        "/connectSocket/**",
-	        "/connectSocket",
-	        "/connectSocket/info",
-	        "/public/**",
+	        "/login"
 	};
 	
 	@Override

@@ -111,7 +111,7 @@ public class StripesLinkService implements IStripesLinkService {
 	}
 
 	@Override
-	public void AddUserSala(String idSala) throws StripesLinkException {
+	public String AddUserSala(String idSala) throws StripesLinkException {
 		Optional<SalaModel> m = salaRepository.findById(idSala);
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
@@ -122,24 +122,46 @@ public class StripesLinkService implements IStripesLinkService {
 			if (sala.getUsersId().contains(user.getId()))
 				throw new StripesLinkException("Usuario ya esta en esta sala");
 			sala.getUsersId().add(user.getId());
+			sala.getTableros().get(sala.getCurrentTablero()).usersId.add(user.getId());
+			int newTablero = (sala.getCurrentTablero() == 0) ? 1 : 0;
+			sala.setCurrentTablero(newTablero);
 			salaRepository.save(sala);
+			return (sala.getCurrentTablero() == 0) ? "Azul" : "Rojo";
 		} else {
 			throw new StripesLinkException("Sala no existe");
 		}
 	}
 
 	@Override
-	public List<Point> getPointsSala(String idSala, int tablero) throws StripesLinkException {
+	public Object getPointsSala(String idSala) throws StripesLinkException {
 		Optional<SalaModel> m = salaRepository.findById(idSala);
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
-			List<Point> puntos = sala.getTableros().get(tablero).getPuntos();
-			if (puntos == null)
-				throw new StripesLinkException("La sala no tiene puntos");
-			return puntos;
-		} else {
+			Object a = new Object() {
+				List<Point> Azul = sala.getTableros().get(0).getPuntos();
+				List<Point> Rojo = sala.getTableros().get(1).getPuntos();
+
+				public List<Point> getAzul() {
+					return Azul;
+				}
+
+				public void setAzul(List<Point> azul) {
+					Azul = azul;
+				}
+
+				public List<Point> getRojo() {
+					return Rojo;
+				}
+
+				public void setRojo(List<Point> rojo) {
+					Rojo = rojo;
+				}
+
+			};
+			System.out.print("---------------" + a);
+			return a;
+		} else
 			throw new StripesLinkException("Sala no existe");
-		}
 	}
 
 	@Override
@@ -154,4 +176,31 @@ public class StripesLinkService implements IStripesLinkService {
 		}
 	}
 
+	@Override
+	public void addPoints(String idSala, List<Point> pts) throws StripesLinkException {
+		Optional<SalaModel> m = salaRepository.findById(idSala);
+		if (m.isPresent()) {
+			SalaModel sala = m.get();
+			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			UserModel user = userRepository.findByUsername(userDetails.getUsername());
+			Tablero tablero = null;
+			for (Tablero t : sala.getTableros()) {
+				if (t.getUsersId().contains(user.getId())) {
+					tablero = t;
+					break;
+				}
+			}
+			if (tablero == null)
+				throw new StripesLinkException("Usuario no esta en ningun tablero");
+			tablero.getPuntos().addAll(pts);
+			List<Tablero> tableros = sala.getTableros();
+			int index = (tableros.get(0).getColor() == tablero.getColor()) ? 0 : 1;
+			tableros.set(index, tablero);
+			sala.setTableros(tableros);
+			salaRepository.save(sala);
+		} else {
+			throw new StripesLinkException("Sala no existe");
+		}
+	}
 }
