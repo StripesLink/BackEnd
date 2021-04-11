@@ -1,0 +1,1 @@
+web: java -jar target/StripesLink-2.4.4.jar
