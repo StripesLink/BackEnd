@@ -24,7 +24,6 @@ import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
 import edu.eci.escuelaing.StripesLink.Service.IStripesLinkService;
 import edu.eci.escuelaing.StripesLink.Service.StripesLinkException;
 
-
 @RestController
 public class SalaController {
 
@@ -52,5 +51,15 @@ public class SalaController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 
+	}
+
+	@GetMapping("/getPointsSala")
+	private ResponseEntity<?> getPointSalas(@RequestParam String idSala, @RequestParam int numTablero) {
+		try {
+			return ResponseEntity.ok(service.getPointsSala(idSala, numTablero));
+		} catch (StripesLinkException e) {
+			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 }

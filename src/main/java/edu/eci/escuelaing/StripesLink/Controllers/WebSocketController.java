@@ -31,6 +31,7 @@ public class WebSocketController {
 	@MessageMapping("/newSala.{idSala}")
 	public void handleSalaEvent(int numtablero, @DestinationVariable String idSala) throws Exception {
 		System.out.println("Nueva conexion a la sala:" + idSala);
-		msgt.convertAndSend("/topic/newSala.{idSala}", persistence.getPointsSala(idSala, numtablero));
+		System.out.println(persistence.getPointsSala(idSala, numtablero));
+		msgt.convertAndSend("/topic/newSala." + idSala, persistence.getPointsSala(idSala, numtablero));
 	}
 }
