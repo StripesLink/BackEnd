@@ -43,7 +43,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	        "/login",
 	        "/connectSocket/**",
 	        "/connectSocket",
-	        "/connectSocket/info"
+	        "/connectSocket/info",
+	        "/public/**"
 	};
 	
 	@Override
@@ -56,22 +57,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().authorizeRequests()
 				.antMatchers(AUTH_SWAGGER_ENDPOINTS).permitAll()
 				.antMatchers(AUTH_ENDPOINTS).permitAll()
-				.anyRequest().authenticated()
-				.and().cors().configurationSource(corsConfigurationSource());
+				.anyRequest().authenticated();
 
 		http.addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);
 	}
 	
-	
+	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowCredentials(false);
+		configuration.addAllowedOrigin("*");
 		configuration.addAllowedMethod(HttpMethod.GET);
 		configuration.addAllowedMethod(HttpMethod.PUT);
 		configuration.addAllowedMethod(HttpMethod.POST);
 		configuration.addAllowedMethod(HttpMethod.DELETE);
+		configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
 		
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 
