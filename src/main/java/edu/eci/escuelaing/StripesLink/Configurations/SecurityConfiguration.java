@@ -19,6 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.google.common.collect.ImmutableList;
+
 import edu.eci.escuelaing.StripesLink.Security.JwtFilterRequest;
 import edu.eci.escuelaing.StripesLink.Security.UserService;
 
@@ -44,7 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	        "/connectSocket/**",
 	        "/connectSocket",
 	        "/connectSocket/info",
-	        "/public/**"
+	        "/public/**",
 	};
 	
 	@Override
@@ -57,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().authorizeRequests()
 				.antMatchers(AUTH_SWAGGER_ENDPOINTS).permitAll()
 				.antMatchers(AUTH_ENDPOINTS).permitAll()
-				.anyRequest().authenticated();
+				.anyRequest().authenticated().and().cors();
 
 		http.addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);
 	}
@@ -65,21 +67,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowCredentials(false);
-		configuration.addAllowedOrigin("*");
-		configuration.addAllowedMethod(HttpMethod.GET);
-		configuration.addAllowedMethod(HttpMethod.PUT);
-		configuration.addAllowedMethod(HttpMethod.POST);
-		configuration.addAllowedMethod(HttpMethod.DELETE);
-		configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-		
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type"));
+       
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
 	}
 
-	@Bean
+	@Bean	
 	public PasswordEncoder passwordEncoder() {
 		return NoOpPasswordEncoder.getInstance();
 	}
