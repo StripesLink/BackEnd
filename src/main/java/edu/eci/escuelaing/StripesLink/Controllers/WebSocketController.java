@@ -1,5 +1,6 @@
 package edu.eci.escuelaing.StripesLink.Controllers;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,9 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import edu.eci.escuelaing.StripesLink.Model.Point;
@@ -23,9 +27,9 @@ public class WebSocketController {
 
 	@MessageMapping("/newPoints.{idSala}.{equipo}")
 	public void handlePointEvent(List<Point> pts, @DestinationVariable String idSala,
-			@DestinationVariable String equipo) throws Exception {
+			@DestinationVariable String equipo,Principal p) throws Exception {
 		System.out.println("Nueva conexion a la sala:" + idSala);
-		persistence.addPoints(idSala, pts);
+		persistence.addPoints(idSala, pts, p.getName());
 		msgt.convertAndSend("/topic/Sala." + idSala + "." + equipo, pts);
 	}
 }

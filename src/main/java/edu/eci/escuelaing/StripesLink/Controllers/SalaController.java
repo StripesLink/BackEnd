@@ -65,7 +65,7 @@ public class SalaController {
 	@PostMapping("/addPointsSala")
 	private ResponseEntity<?> addPointSalas(@RequestParam String idSala, @RequestBody List<Point> pts) {
 		try {
-			service.addPoints(idSala,pts);
+			service.addPoints(idSala,pts,"abc");
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (StripesLinkException e) {
 			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);

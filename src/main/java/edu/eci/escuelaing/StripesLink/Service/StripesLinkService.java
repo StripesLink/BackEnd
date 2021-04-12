@@ -181,13 +181,13 @@ public class StripesLinkService implements IStripesLinkService {
 	}
 
 	@Override
-	public void addPoints(String idSala, List<Point> pts) throws StripesLinkException {
+	public void addPoints(String idSala, List<Point> pts, String name) throws StripesLinkException {
 		Optional<SalaModel> m = salaRepository.findById(idSala);
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
-			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			UserModel user = userRepository.findByUsername(userDetails.getUsername());
+			//UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+			//		.getPrincipal();
+			UserModel user = userRepository.findByUsername(name);
 			Tablero tablero = null;
 			for (Tablero t : sala.getTableros()) {
 				if (t.getUsersId().contains(user.getId())) {

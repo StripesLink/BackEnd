@@ -24,5 +24,5 @@ public interface IStripesLinkService {
 
 	void newPointSala(String idSala, Point pt, int tablero) throws StripesLinkException;
 
-	public void addPoints(String idSala, List<Point> pts) throws StripesLinkException;
+	public void addPoints(String idSala, List<Point> pts, String nombre) throws StripesLinkException;
 }
