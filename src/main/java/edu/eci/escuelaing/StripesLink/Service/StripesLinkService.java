@@ -21,8 +21,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
+import edu.eci.escuelaing.StripesLink.Model.Line;
 import edu.eci.escuelaing.StripesLink.Model.Point;
 import edu.eci.escuelaing.StripesLink.Model.Tablero;
+import edu.eci.escuelaing.StripesLink.Model.User;
 import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaRepository;
@@ -111,14 +113,12 @@ public class StripesLinkService implements IStripesLinkService {
 	}
 
 	@Override
-	public String AddUserSala(String idSala) throws StripesLinkException {
+	public String addUserSala(String idSala) throws StripesLinkException {
 		Optional<SalaModel> m = salaRepository.findById(idSala);
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
-			Authentication auth = SecurityContextHolder
-		            .getContext()
-		            .getAuthentication();
-			
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
 			UserModel user = userRepository.findByUsername(userDetails.getUsername());
@@ -142,51 +142,36 @@ public class StripesLinkService implements IStripesLinkService {
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
 			Object a = new Object() {
-				List<Point> Azul = sala.getTableros().get(0).getPuntos();
-				List<Point> Rojo = sala.getTableros().get(1).getPuntos();
-
-				public List<Point> getAzul() {
+				List<Line> Azul = sala.getTableros().get(0).getLineas();
+				List<Line> Rojo = sala.getTableros().get(1).getLineas();
+				public List<Line> getAzul() {
 					return Azul;
 				}
-
-				public void setAzul(List<Point> azul) {
+				public void setAzul(List<Line> azul) {
 					Azul = azul;
 				}
-
-				public List<Point> getRojo() {
+				public List<Line> getRojo() {
 					return Rojo;
 				}
-
-				public void setRojo(List<Point> rojo) {
+				public void setRojo(List<Line> rojo) {
 					Rojo = rojo;
 				}
-
 			};
 			System.out.print("---------------" + a);
 			return a;
 		} else
 			throw new StripesLinkException("Sala no existe");
 	}
-
+	
+	
 	@Override
-	public void newPointSala(String idSala, Point pt, int tablero) throws StripesLinkException {
+	public void addLineSala(String idSala, Line pts, String name) throws StripesLinkException {
 		Optional<SalaModel> m = salaRepository.findById(idSala);
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
-			sala.getTableros().get(tablero).getPuntos().add(pt);
-			salaRepository.save(sala);
-		} else {
-			throw new StripesLinkException("Sala no existe");
-		}
-	}
-
-	@Override
-	public void addPoints(String idSala, List<Point> pts, String name) throws StripesLinkException {
-		Optional<SalaModel> m = salaRepository.findById(idSala);
-		if (m.isPresent()) {
-			SalaModel sala = m.get();
-			//UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-			//		.getPrincipal();
+			// UserDetails userDetails = (UserDetails)
+			// SecurityContextHolder.getContext().getAuthentication()
+			// .getPrincipal();
 			UserModel user = userRepository.findByUsername(name);
 			Tablero tablero = null;
 			for (Tablero t : sala.getTableros()) {
@@ -197,7 +182,7 @@ public class StripesLinkService implements IStripesLinkService {
 			}
 			if (tablero == null)
 				throw new StripesLinkException("Usuario no esta en ningun tablero");
-			tablero.getPuntos().addAll(pts);
+			tablero.getLineas().add(pts);
 			List<Tablero> tableros = sala.getTableros();
 			int index = (tableros.get(0).getColor() == tablero.getColor()) ? 0 : 1;
 			tableros.set(index, tablero);
@@ -206,5 +191,44 @@ public class StripesLinkService implements IStripesLinkService {
 		} else {
 			throw new StripesLinkException("Sala no existe");
 		}
+	}
+
+	@Override
+	public void removeUserSala(String idSala) throws StripesLinkException {
+		Optional<SalaModel> m = salaRepository.findById(idSala);
+		if (m.isPresent()) {
+			SalaModel sala = m.get();
+			Tablero tablero = null;
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			UserModel user = userRepository.findByUsername(userDetails.getUsername());
+			if (!sala.getUsersId().contains(user.getId()))
+				throw new StripesLinkException("Usuario no esta en esta sala");
+
+			for (Tablero t : sala.getTableros()) {
+				if (t.getUsersId().contains(user.getId())) {
+					int num = (t.getColor().equals("Azul") ? 0 : 1);
+					List<String> users = t.getUsersId();
+					users.remove(user.getId());
+					t.setUsersId(users);
+					List<Tablero> tableros = sala.getTableros();
+					tableros.remove(num);
+					tableros.add(num, t);
+					sala.setTableros(tableros);
+					sala.setCurrentTablero(num);
+					break;
+				}
+			}
+			
+			List<String> users = sala.getUsersId();
+			users.remove(user.getId());
+			sala.setUsersId(users);
+			salaRepository.save(sala);
+		} else {
+			throw new StripesLinkException("Sala no existe");
+		}
+
 	}
 }

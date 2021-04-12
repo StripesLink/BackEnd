@@ -13,6 +13,7 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
+import edu.eci.escuelaing.StripesLink.Model.Line;
 import edu.eci.escuelaing.StripesLink.Model.Point;
 import edu.eci.escuelaing.StripesLink.Service.IStripesLinkService;
 
@@ -26,10 +27,10 @@ public class WebSocketController {
 	IStripesLinkService persistence;
 
 	@MessageMapping("/newPoints.{idSala}.{equipo}")
-	public void handlePointEvent(List<Point> pts, @DestinationVariable String idSala,
+	public void handlePointEvent(Line pts, @DestinationVariable String idSala,
 			@DestinationVariable String equipo,Principal p) throws Exception {
 		System.out.println("Nueva conexion a la sala:" + idSala);
-		persistence.addPoints(idSala, pts, p.getName());
+		persistence.addLineSala(idSala, pts, p.getName());
 		msgt.convertAndSend("/topic/Sala." + idSala + "." + equipo, pts);
 	}
 }

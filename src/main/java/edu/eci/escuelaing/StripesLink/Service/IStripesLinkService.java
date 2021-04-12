@@ -3,6 +3,7 @@ package edu.eci.escuelaing.StripesLink.Service;
 import java.util.List;
 
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
+import edu.eci.escuelaing.StripesLink.Model.Line;
 import edu.eci.escuelaing.StripesLink.Model.Point;
 import edu.eci.escuelaing.StripesLink.Model.User;
 import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
@@ -18,11 +19,11 @@ public interface IStripesLinkService {
 	
 	public List<UserSalaResponse> getAllSalas();
 
-	String AddUserSala(String idSala) throws StripesLinkException;
+	String addUserSala(String idSala) throws StripesLinkException;
+	
+	void removeUserSala(String idSala) throws StripesLinkException;
 
 	Object getPointsSala(String idSala) throws StripesLinkException;
 
-	void newPointSala(String idSala, Point pt, int tablero) throws StripesLinkException;
-
-	public void addPoints(String idSala, List<Point> pts, String nombre) throws StripesLinkException;
+	public void addLineSala(String idSala, Line linea, String nombre) throws StripesLinkException;
 }

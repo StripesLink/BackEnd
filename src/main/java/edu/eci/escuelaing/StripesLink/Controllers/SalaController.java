@@ -11,14 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
 import edu.eci.escuelaing.StripesLink.Model.BaseResponse;
+import edu.eci.escuelaing.StripesLink.Model.Line;
 import edu.eci.escuelaing.StripesLink.Model.Point;
 import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
@@ -26,34 +29,35 @@ import edu.eci.escuelaing.StripesLink.Service.IStripesLinkService;
 import edu.eci.escuelaing.StripesLink.Service.StripesLinkException;
 
 @RestController
+@RequestMapping("sala")
 public class SalaController {
 
 	@Autowired
 	private IStripesLinkService service;
 
-	@PostMapping("/createSala")
+	@PostMapping
 	private ResponseEntity<?> crearSala() {
 		String idSala = service.createSala();
 		return ResponseEntity.ok(new BaseResponse(idSala));
 	}
 
-	@GetMapping("/getAllSalas")
+	@GetMapping
 	private ResponseEntity<?> getAllSalas() {
 		return ResponseEntity.ok(service.getAllSalas());
 	}
 
-	@PutMapping("/addUserSala")
-	private ResponseEntity<?> addUserSala(@RequestParam String idSala) {
+	@PutMapping("/user/{idSala}")
+	private ResponseEntity<?> addUserSala(@PathVariable String idSala) {
 		try {
-			return new ResponseEntity<>(new BaseResponse(service.AddUserSala(idSala)), HttpStatus.CREATED);
+			return new ResponseEntity<>(new BaseResponse(service.addUserSala(idSala)), HttpStatus.CREATED);
 		} catch (StripesLinkException e) {
 			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 
-	@GetMapping("/getPointsSala")
-	private ResponseEntity<?> getPointSalas(@RequestParam String idSala) {
+	@GetMapping("/points/{idSala}")
+	private ResponseEntity<?> getPointSalas(@PathVariable String idSala) {
 		try {
 			return ResponseEntity.ok(service.getPointsSala(idSala));
 		} catch (StripesLinkException e) {
@@ -61,16 +65,28 @@ public class SalaController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	@PostMapping("/addPointsSala")
-	private ResponseEntity<?> addPointSalas(@RequestParam String idSala, @RequestBody List<Point> pts) {
+
+	@PostMapping("/points/{idSala}/{name}")
+	private ResponseEntity<?> addPointSalas(@PathVariable String idSala, @RequestBody Line pts,
+			@PathVariable String name) {
 		try {
-			service.addPoints(idSala,pts,"abc");
+			service.addLineSala(idSala, pts, name);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (StripesLinkException e) {
 			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
+	@PutMapping("/removeUser/{idSala}")
+	private ResponseEntity<?> removeUserSala(@PathVariable String idSala) {
+		try {
+			service.removeUserSala(idSala);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (StripesLinkException e) {
+			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+
 }
