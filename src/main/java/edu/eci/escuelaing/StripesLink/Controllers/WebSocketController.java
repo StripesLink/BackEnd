@@ -32,5 +32,6 @@ public class WebSocketController {
 		System.out.println("Nueva conexion a la sala:" + idSala);
 		persistence.addLineSala(idSala, pts, p.getName());
 		msgt.convertAndSend("/topic/Sala." + idSala + "." + equipo, pts);
+		
 	}
 }
