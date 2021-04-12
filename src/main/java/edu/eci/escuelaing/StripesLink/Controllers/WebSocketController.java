@@ -26,6 +26,6 @@ public class WebSocketController {
 			@DestinationVariable String equipo) throws Exception {
 		System.out.println("Nueva conexion a la sala:" + idSala);
 		persistence.addPoints(idSala, pts);
-		msgt.convertAndSend("/topic/newSala." + idSala + "." + equipo, pts);
+		msgt.convertAndSend("/topic/Sala." + idSala + "." + equipo, pts);
 	}
 }

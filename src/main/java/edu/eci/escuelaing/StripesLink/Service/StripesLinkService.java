@@ -115,6 +115,10 @@ public class StripesLinkService implements IStripesLinkService {
 		Optional<SalaModel> m = salaRepository.findById(idSala);
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
+			Authentication auth = SecurityContextHolder
+		            .getContext()
+		            .getAuthentication();
+			
 			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
 			UserModel user = userRepository.findByUsername(userDetails.getUsername());
@@ -126,7 +130,7 @@ public class StripesLinkService implements IStripesLinkService {
 			int newTablero = (sala.getCurrentTablero() == 0) ? 1 : 0;
 			sala.setCurrentTablero(newTablero);
 			salaRepository.save(sala);
-			return (sala.getCurrentTablero() == 0) ? "Azul" : "Rojo";
+			return (sala.getCurrentTablero() == 0) ? "Rojo" : "Azul";
 		} else {
 			throw new StripesLinkException("Sala no existe");
 		}

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
 import edu.eci.escuelaing.StripesLink.Model.BaseResponse;
+import edu.eci.escuelaing.StripesLink.Model.Point;
 import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
 import edu.eci.escuelaing.StripesLink.Service.IStripesLinkService;
@@ -60,4 +61,16 @@ public class SalaController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@PostMapping("/addPointsSala")
+	private ResponseEntity<?> addPointSalas(@RequestParam String idSala, @RequestBody List<Point> pts) {
+		try {
+			service.addPoints(idSala,pts);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (StripesLinkException e) {
+			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
 }

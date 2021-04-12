@@ -42,7 +42,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	private static final String[] AUTH_ENDPOINTS = {
 	        "/createUser",
-	        "/login"
+	        "/login",
+	        "/connectSocket/**"
 	};
 	
 	@Override
@@ -72,6 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
 	}
+	
 
 	@Bean	
 	public PasswordEncoder passwordEncoder() {
