@@ -23,7 +23,7 @@
 	</properties>
 
 	<dependencies>
-	
+
 		<!--Dependencias Iniciales spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -35,16 +35,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Renicia la aplicacion en cambios -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
-		
+
 		<!-- Spring Security -->
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -55,14 +55,19 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-messaging</artifactId>
+		</dependency>
+
 		<!-- Jwt Token -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
 		</dependency>
-	
+
 		<!-- Swagger -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -99,7 +104,7 @@
 			<version>2.3.4</version>
 		</dependency>
 
-		
+
 		<!-- Mongo -->
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -117,7 +122,7 @@
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 
-		
+
 	</dependencies>
 
 

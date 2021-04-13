@@ -27,11 +27,11 @@ public class WebSocketController {
 	IStripesLinkService persistence;
 
 	@MessageMapping("/newPoints.{idSala}.{equipo}")
-	public void handlePointEvent(Line pts, @DestinationVariable String idSala,
-			@DestinationVariable String equipo,Principal p) throws Exception {
+	public void handlePointEvent(Line pts, @DestinationVariable String idSala, @DestinationVariable String equipo,
+			Principal p) throws Exception {
 		System.out.println("Nueva conexion a la sala:" + idSala);
 		persistence.addLineSala(idSala, pts, p.getName());
 		msgt.convertAndSend("/topic/Sala." + idSala + "." + equipo, pts);
-		
+
 	}
 }
