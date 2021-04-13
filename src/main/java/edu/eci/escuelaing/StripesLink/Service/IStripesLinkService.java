@@ -27,4 +27,8 @@ public interface IStripesLinkService {
 	public void addPoints(String idSala, List<Point> pts) throws StripesLinkException;
 	
 	String getPintorSala(String idSala, String equipo) throws StripesLinkException;
+	
+	public String addTematica(String name) ;
+	
+	void addWordTematica(String idTematica,String palabra) throws StripesLinkException;
 }

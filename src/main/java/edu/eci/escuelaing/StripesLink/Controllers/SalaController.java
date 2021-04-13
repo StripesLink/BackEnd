@@ -62,9 +62,27 @@ public class SalaController {
 	}
 	
 	@GetMapping("/getPintorSala")
-	private ResponseEntity<?> getPintorSala(@RequestParam String idSala) {
+	private ResponseEntity<?> getPintorSala(@RequestParam String idSala,@RequestParam String equipo) {
 		try {
-			return ResponseEntity.ok(service.getPointsSala(idSala));
+			return ResponseEntity.ok(service.getPintorSala(idSala,equipo));
+		} catch (StripesLinkException e) {
+			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PostMapping("/addTematica")
+	private ResponseEntity<?> addTematica(@RequestParam String name) {
+		
+			String idTematica = service.addTematica(name);
+			return ResponseEntity.ok(new BaseResponse(idTematica));
+	}
+	
+	@PutMapping("/addWordTematica")
+	private ResponseEntity<?> addWordTematica(@RequestParam String idTematica,@RequestParam String palabra) {
+		try {
+			service.addWordTematica(idTematica,palabra);
+			return new ResponseEntity<>( HttpStatus.CREATED);
 		} catch (StripesLinkException e) {
 			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

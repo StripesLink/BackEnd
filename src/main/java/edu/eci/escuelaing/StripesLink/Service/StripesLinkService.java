@@ -26,6 +26,8 @@ import edu.eci.escuelaing.StripesLink.Model.Tablero;
 import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaRepository;
+import edu.eci.escuelaing.StripesLink.Model.Mongo.TematicaModel;
+import edu.eci.escuelaing.StripesLink.Model.Mongo.TematicaRepository;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.UserModel;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.UserRepository;
 import edu.eci.escuelaing.StripesLink.Security.JwtUtils;
@@ -39,6 +41,9 @@ public class StripesLinkService implements IStripesLinkService {
 
 	@Autowired
 	private SalaRepository salaRepository;
+	
+	@Autowired
+	private TematicaRepository tematicaRepository;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -131,6 +136,23 @@ public class StripesLinkService implements IStripesLinkService {
 			throw new StripesLinkException("Sala no existe");
 		}
 	}
+	@Override
+	public void addWordTematica(String idTematica,String palabra) throws StripesLinkException {
+		Optional<TematicaModel> m = tematicaRepository.findById(idTematica);
+		if (m.isPresent()) {
+			TematicaModel tematica = m.get();
+			if (tematica.getPalabras().contains(palabra))
+				throw new StripesLinkException("Palabra ya esta en esta tematica");
+			List<String> palabras=tematica.getPalabras();
+			palabras.add(palabra);
+			tematica.setPalabras(palabras);
+			tematicaRepository.save(tematica);
+			
+			
+		} else {
+			throw new StripesLinkException("Tematica no existe");
+		}
+	}
 
 	@Override
 	public Object getPointsSala(String idSala) throws StripesLinkException {
@@ -208,6 +230,13 @@ public class StripesLinkService implements IStripesLinkService {
 		} else {
 			throw new StripesLinkException("Sala no existe");
 		}
+	}
+	
+	@Override
+	public String addTematica(String name) {
+		TematicaModel newTematica = tematicaRepository.save(new TematicaModel(name));
+		return newTematica.getId();
+		
 	}
 
 	@Override

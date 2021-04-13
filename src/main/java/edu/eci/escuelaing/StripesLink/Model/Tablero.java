@@ -14,6 +14,7 @@ public class Tablero {
 	public List<String> usersId;
 	
 	public int currentUser;
+	
 
 	public Tablero(String color) {
 		this.color = color;
