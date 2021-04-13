@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -42,7 +43,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	private static final String[] AUTH_ENDPOINTS = {
 	        "/createUser",
-	        "/login"
+	        "/login",
+	        "/connectSocket/**"
 	};
 	
 	@Override
@@ -52,10 +54,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests()
-				.antMatchers(AUTH_SWAGGER_ENDPOINTS).permitAll()
-				.antMatchers(AUTH_ENDPOINTS).permitAll()
-				.anyRequest().authenticated().and().cors();
+		http.sessionManagement()
+        	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        	.and()
+        	.csrf().disable().authorizeRequests()
+			.antMatchers(AUTH_SWAGGER_ENDPOINTS).permitAll()
+			.antMatchers(AUTH_ENDPOINTS).permitAll()
+			.anyRequest().authenticated().and().cors();
 
 		http.addFilterBefore(jwtFilterRequest, UsernamePasswordAuthenticationFilter.class);
 	}
@@ -72,6 +77,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
 	}
+	
 
 	@Bean	
 	public PasswordEncoder passwordEncoder() {

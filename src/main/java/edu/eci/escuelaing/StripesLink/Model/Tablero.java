@@ -7,7 +7,7 @@ public class Tablero {
 
 	public String color;
 
-	public List<Point> puntos;
+	public List<Line> lineas;
 
 	public String status;
 
@@ -18,7 +18,7 @@ public class Tablero {
 
 	public Tablero(String color) {
 		this.color = color;
-		puntos = new ArrayList();
+		lineas = new ArrayList();
 		usersId = new ArrayList();
 		status = "Created";
 		currentUser=0;
@@ -32,12 +32,12 @@ public class Tablero {
 		this.color = color;
 	}
 
-	public List<Point> getPuntos() {
-		return puntos;
+	public List<Line> getLineas() {
+		return lineas;
 	}
 
-	public void setPuntos(List<Point> puntos) {
-		this.puntos = puntos;
+	public void setLineas(List<Line> lineas) {
+		this.lineas = lineas;
 	}
 
 	public String getStatus() {
