@@ -295,6 +295,23 @@ public class StripesLinkService implements IStripesLinkService {
 		}
 
 	}
+	
+	@Override
+	public boolean findWordTematica(String idTematica,String palabra) throws StripesLinkException {
+		Optional<TematicaModel> m = tematicaRepository.findById(idTematica);
+		if (m.isPresent()) {
+			TematicaModel tematica = m.get();
+			if (tematica.getPalabras().contains(palabra))
+				return true;
+			return false;
+
+		} else {
+			throw new StripesLinkException("Tematica no existe");
+		}
+	}
+		
+		
+	
 
 	
 

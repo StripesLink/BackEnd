@@ -51,6 +51,17 @@ public class TematicaController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/{idTematica}/{palabra}")
+	private ResponseEntity<?> findWordTematica(@PathVariable String idTematica,@PathVariable String palabra) {
+		try {
+			
+			return new ResponseEntity<>(service.findWordTematica(idTematica,palabra), HttpStatus.CREATED);
+		} catch (StripesLinkException e) {
+			Logger.getLogger(TematicaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
 
 
 

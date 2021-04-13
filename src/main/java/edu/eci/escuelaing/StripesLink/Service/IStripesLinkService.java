@@ -33,5 +33,7 @@ public interface IStripesLinkService {
 	void addWordTematica(String idTematica,String palabra) throws StripesLinkException;
 
 	public void addLineSala(String idSala, Line linea, String nombre) throws StripesLinkException;
+	
+	boolean findWordTematica(String idTematica,String palabra) throws StripesLinkException;
 
 }
