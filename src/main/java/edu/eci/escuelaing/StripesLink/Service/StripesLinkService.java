@@ -193,14 +193,14 @@ public class StripesLinkService implements IStripesLinkService {
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
 			 List<Tablero> tableros=sala.getTableros();
-			 int posTablero=0 ;
+			 int posTablero=-1;
 			 for (int i=0;i<tableros.size();i++){ 
-				if ( tableros.get(i).getColor() == equipo){
-					posTablero=i;
+				if (tableros.get(i).getColor().charAt(0)== equipo.charAt(0)){
+					posTablero=i;		
 					break;	
 				}	 
 			 }
-			if (tableros.get(posTablero) == null){
+			if (tableros.get(posTablero) == null || posTablero==-1){
 				throw new StripesLinkException("Tablero no existe");	
 			}
 			
