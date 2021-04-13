@@ -304,7 +304,6 @@ public class StripesLinkService implements IStripesLinkService {
 			if (tematica.getPalabras().contains(palabra))
 				return true;
 			return false;
-
 		} else {
 			throw new StripesLinkException("Tematica no existe");
 		}
