@@ -18,6 +18,7 @@ import edu.eci.escuelaing.StripesLink.Model.Point;
 import edu.eci.escuelaing.StripesLink.Model.Ronda;
 import edu.eci.escuelaing.StripesLink.Model.WinnerMessage;
 import edu.eci.escuelaing.StripesLink.Service.IStripesLinkService;
+import edu.eci.escuelaing.StripesLink.Service.StripesLinkException;
 
 @Controller
 public class WebSocketController {
@@ -44,7 +45,12 @@ public class WebSocketController {
 		if (service.findWordSala(idSala, equipo, palabra)) {
 			System.out.println("Gano usuario" + p.getName());
 			service.cleanSala(idSala);
-			Ronda newRonda = service.newRound(idSala);
+			Ronda newRonda;
+            try {
+                newRonda = service.newRound(idSala);
+            }catch(StripesLinkException e) {
+                newRonda = null;
+            }
 			msgt.convertAndSend("/topic/Sala." + idSala + ".Ganador", new WinnerMessage(p.getName(), newRonda));
 		}
 		msgt.convertAndSend("/topic/Chat." + idSala + "." + equipo, msg);

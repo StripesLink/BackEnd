@@ -448,10 +448,18 @@ public class StripesLinkService implements IStripesLinkService {
 		Optional<SalaModel> m = salaRepository.findById(idSala);
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
-			List<Tablero> tableros = new ArrayList<Tablero>();
-			tableros.add(new Tablero("Azul"));
-			tableros.add(new Tablero("Rojo"));
+			List<Tablero> tableros = sala.getTableros();
+			Tablero t1 = tableros.get(0);
+			Tablero t2 = tableros.get(1);
+			t1.setLineas(new ArrayList<Line>());
+			t1.setPintor(null);
+			t1.setPalabra(null);
+			t2.setLineas(new ArrayList<Line>());
+			t2.setPintor(null);
+			t2.setPalabra(null);
 			sala.setTematica(null);
+			tableros.set(0, t1);
+			tableros.set(1, t2);
 			sala.setTableros(tableros);
 			salaRepository.save(sala);
 		} else {
