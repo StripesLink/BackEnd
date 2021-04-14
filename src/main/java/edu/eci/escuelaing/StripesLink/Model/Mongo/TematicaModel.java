@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.eci.escuelaing.StripesLink.Model.Tablero;
-import edu.eci.escuelaing.StripesLink.Model.User;
 
 @Document(collection = "tematicas")
-
 public class TematicaModel {
 
 	@Id
@@ -20,12 +19,15 @@ public class TematicaModel {
 
 	private List<String> palabras;
 
+	@PersistenceConstructor
 	public TematicaModel(String name) {
+		super();
 		this.name = name;
 		palabras = new ArrayList();
 	}
 
 	public TematicaModel(String name, List<String> palabras) {
+		super();
 		this.name = name;
 		this.palabras = palabras;
 	}

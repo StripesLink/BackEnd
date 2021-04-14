@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
 import edu.eci.escuelaing.StripesLink.Model.BaseResponse;
-import edu.eci.escuelaing.StripesLink.Model.User;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.UserModel;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.UserRepository;
 import edu.eci.escuelaing.StripesLink.Security.JwtUtils;

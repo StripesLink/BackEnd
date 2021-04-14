@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.eci.escuelaing.StripesLink.Model.Tablero;
-import edu.eci.escuelaing.StripesLink.Model.User;
 
 @Document(collection = "salas")
 public class SalaModel {

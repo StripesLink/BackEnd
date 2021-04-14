@@ -6,13 +6,11 @@ public class UserSalaResponse {
 
 	public UserSalaResponse() {
 	}
-	
 
 	public UserSalaResponse(String idSala, int numUsers) {
 		this.idSala = idSala;
 		this.numUsers = numUsers;
 	}
-
 
 	public String getIdSala() {
 		return idSala;

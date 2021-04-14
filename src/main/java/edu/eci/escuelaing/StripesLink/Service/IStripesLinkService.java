@@ -5,7 +5,7 @@ import java.util.List;
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
 import edu.eci.escuelaing.StripesLink.Model.Line;
 import edu.eci.escuelaing.StripesLink.Model.Point;
-import edu.eci.escuelaing.StripesLink.Model.User;
+import edu.eci.escuelaing.StripesLink.Model.Ronda;
 import edu.eci.escuelaing.StripesLink.Model.UserSalaResponse;
 import edu.eci.escuelaing.StripesLink.Model.Mongo.SalaModel;
 
@@ -39,5 +39,7 @@ public interface IStripesLinkService {
 	String chooseTematica() throws StripesLinkException;
 	
 	String chooseWordTematica(String idTematica) throws StripesLinkException;
+
+	Ronda getRound(String idSala) throws StripesLinkException;
 
 }

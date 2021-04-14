@@ -103,5 +103,15 @@ public class SalaController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/ronda/{idSala}")
+	private ResponseEntity<?> getPintorSala(@PathVariable String idSala) {
+		try {
+			return ResponseEntity.ok(service.getRound(idSala));
+		} catch (StripesLinkException e) {
+			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
 
 }
