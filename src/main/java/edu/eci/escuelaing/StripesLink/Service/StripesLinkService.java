@@ -73,10 +73,10 @@ public class StripesLinkService implements IStripesLinkService {
 		if (tematicaRepository.findAll().size() < 1) {
 			List<String> tematicas = Arrays.asList("carros", "animales", "nombres", "cervezas");
 			List<Object> palabras = new ArrayList<Object>();
-			palabras.add(Arrays.asList("ferrari", "renault", "bmw", "chevrolet"));
+			palabras.add(Arrays.asList("ferrari", "renault", "bmw"));
 			palabras.add(Arrays.asList("perro", "gato", "canario", "pez", "pantera"));
 			palabras.add(Arrays.asList("carlos", "juan", "johan", "andrea", "laura"));
-			palabras.add(Arrays.asList("corona", "aguila", "budweiser", "andina"));
+			palabras.add(Arrays.asList("corona", "aguila", "andina"));
 			for (int i = 0; i < tematicas.size(); i++) {
 				tematicaRepository.save(new TematicaModel(tematicas.get(i), (List<String>) palabras.get(i)));
 			}
