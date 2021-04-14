@@ -28,7 +28,7 @@ public interface IStripesLinkService {
 	
 	String getPintorSala(String idSala, String equipo) throws StripesLinkException;
 	
-	public String addTematica(String name) ;
+	public String addTematica(String name) throws StripesLinkException;
 	
 	void addWordTematica(String idTematica,String palabra) throws StripesLinkException;
 

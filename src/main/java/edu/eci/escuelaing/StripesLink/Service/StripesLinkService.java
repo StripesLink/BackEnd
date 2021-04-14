@@ -146,6 +146,7 @@ public class StripesLinkService implements IStripesLinkService {
 		Optional<TematicaModel> m = tematicaRepository.findById(idTematica);
 		if (m.isPresent()) {
 			TematicaModel tematica = m.get();
+			palabra=palabra.toLowerCase();
 			if (tematica.getPalabras().contains(palabra))
 				throw new StripesLinkException("Palabra ya esta en esta tematica");
 			List<String> palabras=tematica.getPalabras();
@@ -252,7 +253,15 @@ public class StripesLinkService implements IStripesLinkService {
 	}
 	
 	@Override
-	public String addTematica(String name) {
+	public String addTematica(String name) throws StripesLinkException {
+		List<TematicaModel> tematicas = tematicaRepository.findAll();
+		name=name.toLowerCase();
+		for (TematicaModel t : tematicas) {
+			if (t.getName().equals(name)) {
+				throw new StripesLinkException("Tematica ya se encuentra agregada");
+				
+			}
+		}
 		TematicaModel newTematica = tematicaRepository.save(new TematicaModel(name));
 		return newTematica.getId();
 		
@@ -302,6 +311,7 @@ public class StripesLinkService implements IStripesLinkService {
 		Optional<TematicaModel> m = tematicaRepository.findById(idTematica);
 		if (m.isPresent()) {
 			TematicaModel tematica = m.get();
+			palabra=palabra.toLowerCase();
 			if (tematica.getPalabras().contains(palabra))
 				return true;
 			return false;
