@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TematicaRepository extends MongoRepository<TematicaModel, String> {
 	
+	TematicaModel findByUsername(String name);
+	
 }
 
 	

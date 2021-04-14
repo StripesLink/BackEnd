@@ -36,9 +36,14 @@ public class TematicaController {
 	private IStripesLinkService service;
 	
 	@PostMapping("/{name}")
-	private ResponseEntity<?> addTematica(@PathVariable String name) {
+	private ResponseEntity<?> addTematica(@PathVariable String name) throws StripesLinkException {
+		try {
 			String idTematica = service.addTematica(name);
 			return ResponseEntity.ok(new BaseResponse(idTematica));
+		} catch (StripesLinkException e) {
+			Logger.getLogger(TematicaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PutMapping("/{idTematica}/{palabra}")
