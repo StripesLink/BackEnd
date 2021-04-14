@@ -39,10 +39,11 @@ public class WebSocketController {
 	@MessageMapping("/chat.{idSala}.{equipo}")
 	public void handleChatEvent(String msg, @DestinationVariable String idSala, @DestinationVariable String equipo,
 			Principal p) throws Exception {
-		msg.replace('"',' ').trim();
+		String palabra = msg.replace('"',' ').trim();
 		System.out.println("Nueva conexion a la sala-chat:" + idSala);
-		if (service.findWordSala(idSala, equipo, msg)) {
+		if (service.findWordSala(idSala, equipo, palabra)) {
 			System.out.println("Gano usuario" + p.getName());
+			service.cleanSala(idSala);
 			Ronda newRonda = service.newRound(idSala);
 			msgt.convertAndSend("/topic/Sala." + idSala + ".Ganador", new WinnerMessage(p.getName(), newRonda));
 		}

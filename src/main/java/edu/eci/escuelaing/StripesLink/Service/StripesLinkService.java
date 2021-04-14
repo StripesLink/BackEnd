@@ -347,7 +347,7 @@ public class StripesLinkService implements IStripesLinkService {
 			SalaModel sala = m.get();
 			Tablero tablero = (sala.getTableros().get(0).getColor().equals(equipo)) ? sala.getTableros().get(0)
 					: sala.getTableros().get(1);
-			if(tablero.getPalabra().equals(palabra)) {
+			if (tablero.getPalabra().equals(palabra)) {
 				return true;
 			}
 			return false;
@@ -441,6 +441,23 @@ public class StripesLinkService implements IStripesLinkService {
 		} catch (StripesLinkException e) {
 			throw new StripesLinkException(e.getMessage());
 		}
+	}
+
+	@Override
+	public void cleanSala(String idSala) throws StripesLinkException {
+		Optional<SalaModel> m = salaRepository.findById(idSala);
+		if (m.isPresent()) {
+			SalaModel sala = m.get();
+			List<Tablero> tableros = new ArrayList<Tablero>();
+			tableros.add(new Tablero("Azul"));
+			tableros.add(new Tablero("Rojo"));
+			sala.setTematica(null);
+			sala.setTableros(tableros);
+			salaRepository.save(sala);
+		} else {
+			throw new StripesLinkException("No existe la sala");
+		}
+
 	}
 
 }
