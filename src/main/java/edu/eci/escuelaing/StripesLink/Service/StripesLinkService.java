@@ -329,7 +329,7 @@ public class StripesLinkService implements IStripesLinkService {
 		} else {
 			Random rand = new Random();
 			TematicaModel tematica=tematicas.get(rand.nextInt(tematicas.size()));
-			return tematica.getId();
+			return tematica.getName();
 		}
 	}
 	
