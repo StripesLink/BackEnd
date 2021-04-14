@@ -62,6 +62,26 @@ public class TematicaController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping
+	private ResponseEntity<?> chooseTematica() {
+		try {
+			return new ResponseEntity<>(service.chooseTematica(), HttpStatus.CREATED);
+		} catch (StripesLinkException e) {
+			Logger.getLogger(TematicaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@GetMapping("/{idTematica}")
+	private ResponseEntity<?> chooseWordTematica(@PathVariable String idTematica) {
+		try {
+			return new ResponseEntity<>(service.chooseWordTematica(idTematica), HttpStatus.CREATED);
+		} catch (StripesLinkException e) {
+			Logger.getLogger(TematicaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
 
 
 

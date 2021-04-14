@@ -3,6 +3,7 @@ package edu.eci.escuelaing.StripesLink.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -304,6 +305,35 @@ public class StripesLinkService implements IStripesLinkService {
 			if (tematica.getPalabras().contains(palabra))
 				return true;
 			return false;
+		} else {
+			throw new StripesLinkException("Tematica no existe");
+		}
+	}
+	
+	@Override
+	public String chooseTematica() throws StripesLinkException {
+		List<TematicaModel> tematicas = tematicaRepository.findAll();
+		if (tematicas== null || tematicas.size()==0) {
+			throw new StripesLinkException("No hay Tematicas");
+
+		} else {
+			Random rand = new Random();
+			TematicaModel tematica=tematicas.get(rand.nextInt(tematicas.size()));
+			return tematica.getId();
+		}
+	}
+	
+	@Override
+	public String chooseWordTematica(String idTematica) throws StripesLinkException {
+		Optional<TematicaModel> m = tematicaRepository.findById(idTematica);
+		if (m.isPresent()) {
+			TematicaModel tematica = m.get();
+			if (tematica.getPalabras()==null || tematica.getPalabras().size()==0) 
+				throw new StripesLinkException("No hay palabras en esta tematica");
+				
+			Random rand = new Random();
+			String palabra=tematica.getPalabras().get(rand.nextInt(tematica.getPalabras().size()));
+			return palabra;
 		} else {
 			throw new StripesLinkException("Tematica no existe");
 		}
