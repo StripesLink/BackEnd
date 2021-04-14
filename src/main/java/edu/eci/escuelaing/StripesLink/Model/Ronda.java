@@ -2,17 +2,17 @@ package edu.eci.escuelaing.StripesLink.Model;
 
 public class Ronda {
 	private String nameTematica;
-	private String Idtematica;
+	private String idTematica;
 	private String pintorAzul;
 	private String pintorRojo;
 	private String palabraAzul;
 	private String palabraRojo;
 
-	public Ronda(String nameTematica, String idtematica, String pintorAzul, String pintorRojo, String palabraAzul,
+	public Ronda(String nameTematica, String idTematica, String pintorAzul, String pintorRojo, String palabraAzul,
 			String palabraRojo) {
 		super();
 		this.nameTematica = nameTematica;
-		Idtematica = idtematica;
+		this.idTematica = idTematica;
 		this.pintorAzul = pintorAzul;
 		this.pintorRojo = pintorRojo;
 		this.palabraAzul = palabraAzul;
@@ -27,12 +27,12 @@ public class Ronda {
 		this.nameTematica = nameTematica;
 	}
 
-	public String getIdtematica() {
-		return Idtematica;
+	public String getidTematica() {
+		return idTematica;
 	}
 
-	public void setIdtematica(String idtematica) {
-		Idtematica = idtematica;
+	public void setidTematica(String idTematica) {
+		this.idTematica = idTematica;
 	}
 
 	public String getPintorAzul() {

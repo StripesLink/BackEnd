@@ -78,7 +78,7 @@ public class StripesLinkService implements IStripesLinkService {
 			palabras.add(Arrays.asList("carlos", "juan", "johan", "andrea", "laura"));
 			palabras.add(Arrays.asList("corona", "aguila", "budweiser", "andina"));
 			for (int i = 0; i < tematicas.size(); i++) {
-				tematicaRepository.save(new TematicaModel(tematicas.get(i), (List<String>) palabras.get(0)));
+				tematicaRepository.save(new TematicaModel(tematicas.get(i), (List<String>) palabras.get(i)));
 			}
 		}
 	}
@@ -375,7 +375,7 @@ public class StripesLinkService implements IStripesLinkService {
 			String palabraRojo = chooseWordTematica(idTematica);
 			String pintorAzul = getPintorSala(idSala,"Azul");
 			String pintorRojo = getPintorSala(idSala,"Rojo");
-			Ronda ronda = new Ronda(nameTematica,idTematica,palabraAzul,palabraRojo,pintorAzul,pintorRojo);
+			Ronda ronda = new Ronda(nameTematica,idTematica,pintorAzul,pintorRojo,palabraAzul,palabraRojo);
 			return ronda;
 		}catch(StripesLinkException e) {
 			throw new StripesLinkException(e.getMessage());
