@@ -1,6 +1,7 @@
 package edu.eci.escuelaing.StripesLink.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -44,7 +45,7 @@ public class StripesLinkService implements IStripesLinkService {
 
 	@Autowired
 	private SalaRepository salaRepository;
-	
+
 	@Autowired
 	private TematicaRepository tematicaRepository;
 
@@ -58,11 +59,26 @@ public class StripesLinkService implements IStripesLinkService {
 	private JwtUtils jwtUtils;
 
 	@PostConstruct
-	public void seedData() {
+	public void seedDataSalas() {
 		List<UserSalaResponse> salas = getAllSalas();
 		if (salas.size() < 1) {
 			for (int i = 0; i < 10; i++) {
 				createSala();
+			}
+		}
+	}
+
+	@PostConstruct
+	public void seedDataTematicas() {
+		if(tematicaRepository.findAll().size()<1) {
+			List<String> tematicas = Arrays.asList("carros","animales","nombres","cervezas");
+			List<Object> palabras = new ArrayList<Object>();
+			palabras.add(Arrays.asList("ferrari","renault","bmw","chevrolet"));
+			palabras.add(Arrays.asList("perro","gato","canario","pez","pantera"));
+			palabras.add(Arrays.asList("carlos", "juan", "johan", "andrea", "laura"));
+			palabras.add(Arrays.asList("corona", "aguila", "budweiser", "andina"));
+			for (int i=0; i<tematicas.size() ;i++) {
+				tematicaRepository.save(new TematicaModel(tematicas.get(i),(List<String>) palabras.get(0)));
 			}
 		}
 	}
@@ -141,19 +157,19 @@ public class StripesLinkService implements IStripesLinkService {
 			throw new StripesLinkException("Sala no existe");
 		}
 	}
+
 	@Override
-	public void addWordTematica(String idTematica,String palabra) throws StripesLinkException {
+	public void addWordTematica(String idTematica, String palabra) throws StripesLinkException {
 		Optional<TematicaModel> m = tematicaRepository.findById(idTematica);
 		if (m.isPresent()) {
 			TematicaModel tematica = m.get();
 			if (tematica.getPalabras().contains(palabra))
 				throw new StripesLinkException("Palabra ya esta en esta tematica");
-			List<String> palabras=tematica.getPalabras();
+			List<String> palabras = tematica.getPalabras();
 			palabras.add(palabra);
 			tematica.setPalabras(palabras);
 			tematicaRepository.save(tematica);
-			
-			
+
 		} else {
 			throw new StripesLinkException("Tematica no existe");
 		}
@@ -167,15 +183,19 @@ public class StripesLinkService implements IStripesLinkService {
 			Object a = new Object() {
 				List<Line> Azul = sala.getTableros().get(0).getLineas();
 				List<Line> Rojo = sala.getTableros().get(1).getLineas();
+
 				public List<Line> getAzul() {
 					return Azul;
 				}
+
 				public void setAzul(List<Line> azul) {
 					Azul = azul;
 				}
+
 				public List<Line> getRojo() {
 					return Rojo;
 				}
+
 				public void setRojo(List<Line> rojo) {
 					Rojo = rojo;
 				}
@@ -185,42 +205,40 @@ public class StripesLinkService implements IStripesLinkService {
 		} else
 			throw new StripesLinkException("Sala no existe");
 	}
-	
 
 	@Override
 	public String getPintorSala(String idSala, String equipo) throws StripesLinkException {
 		Optional<SalaModel> m = salaRepository.findById(idSala);
-		String pintor=null;
+		String pintor = null;
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
-			 List<Tablero> tableros=sala.getTableros();
-			 int posTablero=-1;
-			 for (int i=0;i<tableros.size();i++){ 
-				if (tableros.get(i).getColor().charAt(0)== equipo.charAt(0)){
-					posTablero=i;		
-					break;	
-				}	 
-			 }
-			if (tableros.get(posTablero) == null || posTablero==-1){
-				throw new StripesLinkException("Tablero no existe");	
+			List<Tablero> tableros = sala.getTableros();
+			int posTablero = -1;
+			for (int i = 0; i < tableros.size(); i++) {
+				if (tableros.get(i).getColor().charAt(0) == equipo.charAt(0)) {
+					posTablero = i;
+					break;
+				}
 			}
-			
-			List<String> usuarios =tableros.get(posTablero).getUsersId();
-			int current=tableros.get(posTablero).getCurrentUser();
-			if (current == usuarios.size()-1){
+			if (tableros.get(posTablero) == null || posTablero == -1) {
+				throw new StripesLinkException("Tablero no existe");
+			}
+
+			List<String> usuarios = tableros.get(posTablero).getUsersId();
+			int current = tableros.get(posTablero).getCurrentUser();
+			if (current == usuarios.size() - 1) {
 				tableros.get(posTablero).setCurrentUser(0);
-				pintor=tableros.get(posTablero).getUsersId().get(current);	
-			}else{
-				
-				pintor=tableros.get(posTablero).getUsersId().get(current);
-				tableros.get(posTablero).setCurrentUser(current+1);
+				pintor = tableros.get(posTablero).getUsersId().get(current);
+			} else {
+
+				pintor = tableros.get(posTablero).getUsersId().get(current);
+				tableros.get(posTablero).setCurrentUser(current + 1);
 			}
 			sala.setTableros(tableros);
 			salaRepository.save(sala);
 		}
-			return pintor;
+		return pintor;
 	}
-
 
 	@Override
 	public void addLineSala(String idSala, Line pts, String name) throws StripesLinkException {
@@ -250,12 +268,12 @@ public class StripesLinkService implements IStripesLinkService {
 			throw new StripesLinkException("Sala no existe");
 		}
 	}
-	
+
 	@Override
 	public String addTematica(String name) {
 		TematicaModel newTematica = tematicaRepository.save(new TematicaModel(name));
 		return newTematica.getId();
-		
+
 	}
 
 	@Override
@@ -286,7 +304,7 @@ public class StripesLinkService implements IStripesLinkService {
 					break;
 				}
 			}
-			
+
 			List<String> users = sala.getUsersId();
 			users.remove(user.getId());
 			sala.setUsersId(users);
@@ -296,9 +314,9 @@ public class StripesLinkService implements IStripesLinkService {
 		}
 
 	}
-	
+
 	@Override
-	public boolean findWordTematica(String idTematica,String palabra) throws StripesLinkException {
+	public boolean findWordTematica(String idTematica, String palabra) throws StripesLinkException {
 		Optional<TematicaModel> m = tematicaRepository.findById(idTematica);
 		if (m.isPresent()) {
 			TematicaModel tematica = m.get();
@@ -309,39 +327,34 @@ public class StripesLinkService implements IStripesLinkService {
 			throw new StripesLinkException("Tematica no existe");
 		}
 	}
-	
+
 	@Override
 	public String chooseTematica() throws StripesLinkException {
 		List<TematicaModel> tematicas = tematicaRepository.findAll();
-		if (tematicas== null || tematicas.size()==0) {
+		if (tematicas == null || tematicas.size() == 0) {
 			throw new StripesLinkException("No hay Tematicas");
 
 		} else {
 			Random rand = new Random();
-			TematicaModel tematica=tematicas.get(rand.nextInt(tematicas.size()));
+			TematicaModel tematica = tematicas.get(rand.nextInt(tematicas.size()));
 			return tematica.getId();
 		}
 	}
-	
+
 	@Override
 	public String chooseWordTematica(String idTematica) throws StripesLinkException {
 		Optional<TematicaModel> m = tematicaRepository.findById(idTematica);
 		if (m.isPresent()) {
 			TematicaModel tematica = m.get();
-			if (tematica.getPalabras()==null || tematica.getPalabras().size()==0) 
+			if (tematica.getPalabras() == null || tematica.getPalabras().size() == 0)
 				throw new StripesLinkException("No hay palabras en esta tematica");
-				
+
 			Random rand = new Random();
-			String palabra=tematica.getPalabras().get(rand.nextInt(tematica.getPalabras().size()));
+			String palabra = tematica.getPalabras().get(rand.nextInt(tematica.getPalabras().size()));
 			return palabra;
 		} else {
 			throw new StripesLinkException("Tematica no existe");
 		}
 	}
-		
-		
-	
-
-	
 
 }
