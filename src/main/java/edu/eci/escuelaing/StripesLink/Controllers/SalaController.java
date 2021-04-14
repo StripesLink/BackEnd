@@ -105,9 +105,19 @@ public class SalaController {
 	}
 	
 	@GetMapping("/ronda/{idSala}")
-	private ResponseEntity<?> getPintorSala(@PathVariable String idSala) {
+	private ResponseEntity<?> getCurrentRonda(@PathVariable String idSala) {
 		try {
 			return ResponseEntity.ok(service.getRound(idSala));
+		} catch (StripesLinkException e) {
+			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PostMapping("/newRound/{idSala}")
+	private ResponseEntity<?> getNewRonda(@PathVariable String idSala) {
+		try {
+			return ResponseEntity.ok(service.newRound(idSala));
 		} catch (StripesLinkException e) {
 			Logger.getLogger(SalaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

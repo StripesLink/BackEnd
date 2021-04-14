@@ -9,19 +9,19 @@ public class Tablero {
 
 	public List<Line> lineas;
 
-	public String status;
-
 	public List<String> usersId;
-	
+
 	public int currentUser;
+
+	public String palabra;
 	
+	public String pintor;
 
 	public Tablero(String color) {
 		this.color = color;
 		lineas = new ArrayList();
 		usersId = new ArrayList();
-		status = "Created";
-		currentUser=0;
+		currentUser = 0;
 	}
 
 	public String getColor() {
@@ -40,18 +40,10 @@ public class Tablero {
 		this.lineas = lineas;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public List<String> getUsersId() {
 		return usersId;
 	}
-	
+
 	public void setUsersId(List<String> usersId) {
 		this.usersId = usersId;
 	}
@@ -63,7 +55,23 @@ public class Tablero {
 	public void setCurrentUser(int currentUser) {
 		this.currentUser = currentUser;
 	}
+
+	public String getPalabra() {
+		return palabra;
+	}
+
+	public void setPalabra(String palabra) {
+		this.palabra = palabra;
+	}
+
+	public String getPintor() {
+		return pintor;
+	}
+
+	public void setPintor(String pintor) {
+		this.pintor = pintor;
+	}
+	
 	
 
-	
 }

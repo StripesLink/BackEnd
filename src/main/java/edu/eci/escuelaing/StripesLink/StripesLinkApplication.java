@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@EnableSwagger2
+
 @SpringBootApplication
 @ComponentScan("edu.eci.escuelaing")
 @EnableMongoRepositories("edu.eci.escuelaing")

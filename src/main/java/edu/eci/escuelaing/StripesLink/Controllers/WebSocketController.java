@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 
 import edu.eci.escuelaing.StripesLink.Model.Line;
 import edu.eci.escuelaing.StripesLink.Model.Point;
+import edu.eci.escuelaing.StripesLink.Model.Ronda;
+import edu.eci.escuelaing.StripesLink.Model.WinnerMessage;
 import edu.eci.escuelaing.StripesLink.Service.IStripesLinkService;
 
 @Controller
@@ -24,14 +26,25 @@ public class WebSocketController {
 	SimpMessagingTemplate msgt;
 
 	@Autowired
-	IStripesLinkService persistence;
+	IStripesLinkService service;
 
 	@MessageMapping("/newPoints.{idSala}.{equipo}")
 	public void handlePointEvent(Line pts, @DestinationVariable String idSala, @DestinationVariable String equipo,
 			Principal p) throws Exception {
 		System.out.println("Nueva conexion a la sala:" + idSala);
-		persistence.addLineSala(idSala, pts, p.getName());
+		service.addLineSala(idSala, pts, p.getName());
 		msgt.convertAndSend("/topic/Sala." + idSala + "." + equipo, pts);
+	}
 
+	@MessageMapping("/chat.{idSala}.{equipo}")
+	public void handleChatEvent(String msg, @DestinationVariable String idSala, @DestinationVariable String equipo,
+			Principal p) throws Exception {
+		System.out.println("Nueva conexion a la sala-chat:" + idSala);
+		if (service.findWordTematica(idSala, msg)) {
+			System.out.println("Gano usuario"+ p.getName());
+			Ronda newRonda= service.newRound(idSala);
+			msgt.convertAndSend("/topic/Sala." + idSala + ".Ganador" , new WinnerMessage(p.getName(), newRonda));
+		}
+		msgt.convertAndSend("/topic/Sala." + idSala + "." + equipo, msg);
 	}
 }

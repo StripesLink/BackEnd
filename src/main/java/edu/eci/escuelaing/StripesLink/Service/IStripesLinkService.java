@@ -30,16 +30,18 @@ public interface IStripesLinkService {
 	
 	public String addTematica(String name) throws StripesLinkException;
 	
-	void addWordTematica(String idTematica,String palabra) throws StripesLinkException;
+	void addWordTematica(String name,String palabra) throws StripesLinkException;
 
 	public void addLineSala(String idSala, Line linea, String nombre) throws StripesLinkException;
 	
-	boolean findWordTematica(String idTematica,String palabra) throws StripesLinkException;
+	boolean findWordTematica(String name,String palabra) throws StripesLinkException;
 	
 	String chooseTematica() throws StripesLinkException;
 	
-	String chooseWordTematica(String idTematica) throws StripesLinkException;
+	String chooseWordTematica(String name) throws StripesLinkException;
 
 	Ronda getRound(String idSala) throws StripesLinkException;
+	
+	Ronda newRound(String idSala) throws StripesLinkException;
 
 }

@@ -46,10 +46,10 @@ public class TematicaController {
 		}
 	}
 	
-	@PutMapping("/{idTematica}/{palabra}")
-	private ResponseEntity<?> addWordTematica(@PathVariable String idTematica,@PathVariable String palabra) {
+	@PutMapping("/{name}/{palabra}")
+	private ResponseEntity<?> addWordTematica(@PathVariable String name,@PathVariable String palabra) {
 		try {
-			service.addWordTematica(idTematica,palabra);
+			service.addWordTematica(name,palabra);
 			return new ResponseEntity<>( HttpStatus.CREATED);
 		} catch (StripesLinkException e) {
 			Logger.getLogger(TematicaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -57,11 +57,11 @@ public class TematicaController {
 		}
 	}
 	
-	@GetMapping("/{idTematica}/{palabra}")
-	private ResponseEntity<?> findWordTematica(@PathVariable String idTematica,@PathVariable String palabra) {
+	@GetMapping("/{name}/{palabra}")
+	private ResponseEntity<?> findWordTematica(@PathVariable String name,@PathVariable String palabra) {
 		try {
 			
-			return new ResponseEntity<>(service.findWordTematica(idTematica,palabra), HttpStatus.CREATED);
+			return new ResponseEntity<>(service.findWordTematica(name,palabra), HttpStatus.CREATED);
 		} catch (StripesLinkException e) {
 			Logger.getLogger(TematicaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -78,10 +78,10 @@ public class TematicaController {
 		}
 	}
 	
-	@GetMapping("/{idTematica}")
-	private ResponseEntity<?> chooseWordTematica(@PathVariable String idTematica) {
+	@GetMapping("/{name}")
+	private ResponseEntity<?> chooseWordTematica(@PathVariable String name) {
 		try {
-			return new ResponseEntity<>(service.chooseWordTematica(idTematica), HttpStatus.CREATED);
+			return new ResponseEntity<>(service.chooseWordTematica(name), HttpStatus.CREATED);
 		} catch (StripesLinkException e) {
 			Logger.getLogger(TematicaController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

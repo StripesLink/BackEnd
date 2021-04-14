@@ -17,8 +17,10 @@ public class SalaModel {
 	private List<Tablero> tableros;
 
 	private List<String> usersId;
-	
+
 	private int currentTablero = 0;
+
+	private String Tematica;
 
 	public SalaModel(List<Tablero> tableros) {
 		this.tableros = tableros;
@@ -52,4 +54,13 @@ public class SalaModel {
 	public void setCurrentTablero(int currentTablero) {
 		this.currentTablero = currentTablero;
 	}
+
+	public String getTematica() {
+		return Tematica;
+	}
+
+	public void setTematica(String tematica) {
+		Tematica = tematica;
+	}
+
 }
