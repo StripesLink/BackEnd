@@ -44,4 +44,6 @@ public interface IStripesLinkService {
 	
 	Ronda newRound(String idSala) throws StripesLinkException;
 
+	boolean findWordSala(String idSala, String equipo, String palabra) throws StripesLinkException;
+
 }

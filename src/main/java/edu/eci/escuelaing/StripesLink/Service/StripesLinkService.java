@@ -341,6 +341,22 @@ public class StripesLinkService implements IStripesLinkService {
 	}
 
 	@Override
+	public boolean findWordSala(String idSala, String equipo, String palabra) throws StripesLinkException {
+		Optional<SalaModel> m = salaRepository.findById(idSala);
+		if (m.isPresent()) {
+			SalaModel sala = m.get();
+			Tablero tablero = (sala.getTableros().get(0).getColor().equals(equipo)) ? sala.getTableros().get(0)
+					: sala.getTableros().get(1);
+			if(tablero.getPalabra().equals(palabra)) {
+				return true;
+			}
+			return false;
+		} else {
+			throw new StripesLinkException("Tematica no existe");
+		}
+	}
+
+	@Override
 	public String chooseTematica() throws StripesLinkException {
 		List<TematicaModel> tematicas = tematicaRepository.findAll();
 		if (tematicas == null || tematicas.size() == 0) {

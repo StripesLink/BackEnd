@@ -40,11 +40,11 @@ public class WebSocketController {
 	public void handleChatEvent(String msg, @DestinationVariable String idSala, @DestinationVariable String equipo,
 			Principal p) throws Exception {
 		System.out.println("Nueva conexion a la sala-chat:" + idSala);
-		if (service.findWordTematica(idSala, msg)) {
-			System.out.println("Gano usuario"+ p.getName());
-			Ronda newRonda= service.newRound(idSala);
-			msgt.convertAndSend("/topic/Sala." + idSala + ".Ganador" , new WinnerMessage(p.getName(), newRonda));
+		if (service.findWordSala(idSala, equipo, msg)) {
+			System.out.println("Gano usuario" + p.getName());
+			Ronda newRonda = service.newRound(idSala);
+			msgt.convertAndSend("/topic/Sala." + idSala + ".Ganador", new WinnerMessage(p.getName(), newRonda));
 		}
-		msgt.convertAndSend("/topic/Sala." + idSala + "." + equipo, msg);
+		msgt.convertAndSend("/topic/Chat." + idSala + "." + equipo, msg);
 	}
 }
