@@ -40,19 +40,40 @@ public class WebSocketController {
 	@MessageMapping("/chat.{idSala}.{equipo}")
 	public void handleChatEvent(String msg, @DestinationVariable String idSala, @DestinationVariable String equipo,
 			Principal p) throws Exception {
-		String palabra = msg.replace('"',' ').trim();
+		String palabra = msg.replace('"', ' ').trim();
 		System.out.println("Nueva conexion a la sala-chat:" + idSala);
 		if (service.findWordSala(idSala, equipo, palabra)) {
 			System.out.println("Gano usuario" + p.getName());
 			service.cleanSala(idSala);
 			Ronda newRonda;
-            try {
-                newRonda = service.newRound(idSala);
-            }catch(StripesLinkException e) {
-                newRonda = null;
-            }
+			try {
+				newRonda = service.newRound(idSala);
+			} catch (StripesLinkException e) {
+				newRonda = null;
+			}
 			msgt.convertAndSend("/topic/Sala." + idSala + ".Ganador", new WinnerMessage(p.getName(), newRonda));
 		}
 		msgt.convertAndSend("/topic/Chat." + idSala + "." + equipo, msg);
 	}
+
+	@MessageMapping("/users.{idSala}")
+	public void handleChatEvent(String msg, @DestinationVariable String idSala) {
+		int users = 0;
+		try {
+			users = service.getUsersSala(idSala);
+			Ronda r = service.getRound(idSala);
+			if (msg.equals("Connect")) {
+				if (users == 2) {
+					msgt.convertAndSend("/topic/Sala." + idSala, r);
+				}
+			} else if (msg.equals("Disconect")) {
+				if (users < 2) {
+					msgt.convertAndSend("/topic/Sala." + idSala);
+				}
+			}
+		} catch (StripesLinkException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

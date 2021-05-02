@@ -71,12 +71,12 @@ public class StripesLinkService implements IStripesLinkService {
 	@PostConstruct
 	public void seedDataTematicas() {
 		if (tematicaRepository.findAll().size() < 1) {
-			List<String> tematicas = Arrays.asList("carros", "animales", "nombres", "cervezas");
+			List<String> tematicas = Arrays.asList("peliculas", "animales", "acciones", "frutas");
 			List<Object> palabras = new ArrayList<Object>();
-			palabras.add(Arrays.asList("ferrari", "renault", "bmw"));
+			palabras.add(Arrays.asList("titanic", "harry potter", "los vengadores", "godzilla", "frozen"));
 			palabras.add(Arrays.asList("perro", "gato", "canario", "pez", "pantera"));
-			palabras.add(Arrays.asList("carlos", "juan", "johan", "andrea", "laura"));
-			palabras.add(Arrays.asList("corona", "aguila", "andina"));
+			palabras.add(Arrays.asList("nadar", "saltar", "dormir", "escribir", "leer", "conducir"));
+			palabras.add(Arrays.asList("manzana", "pera", "cereza", "banana", "naranja", "piña", "mora"));
 			for (int i = 0; i < tematicas.size(); i++) {
 				tematicaRepository.save(new TematicaModel(tematicas.get(i), (List<String>) palabras.get(i)));
 			}
@@ -465,7 +465,17 @@ public class StripesLinkService implements IStripesLinkService {
 		} else {
 			throw new StripesLinkException("No existe la sala");
 		}
+	}
 
+	@Override
+	public int getUsersSala(String idSala) throws StripesLinkException {
+		Optional<SalaModel> m = salaRepository.findById(idSala);
+		if (m.isPresent()) {
+			SalaModel sala = m.get();
+			return sala.getUsersId().size();
+		} else {
+			throw new StripesLinkException("No existe la sala");
+		}
 	}
 
 }

@@ -26,7 +26,7 @@ import edu.eci.escuelaing.StripesLink.Security.JwtFilterRequest;
 import edu.eci.escuelaing.StripesLink.Security.UserService;
 
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserService userService;

@@ -47,5 +47,7 @@ public interface IStripesLinkService {
 	boolean findWordSala(String idSala, String equipo, String palabra) throws StripesLinkException;
 
 	void cleanSala(String idSala) throws StripesLinkException;
+	
+	public int getUsersSala(String idSala) throws StripesLinkException;
 
 }
