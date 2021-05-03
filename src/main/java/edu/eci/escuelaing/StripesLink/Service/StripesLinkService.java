@@ -3,6 +3,7 @@ package edu.eci.escuelaing.StripesLink.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Level;
@@ -22,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import edu.eci.escuelaing.StripesLink.Cache.ICacheRedis;
 import edu.eci.escuelaing.StripesLink.Model.AuthenticationRequest;
 import edu.eci.escuelaing.StripesLink.Model.Line;
 import edu.eci.escuelaing.StripesLink.Model.Point;
@@ -58,9 +60,12 @@ public class StripesLinkService implements IStripesLinkService {
 	@Autowired
 	private JwtUtils jwtUtils;
 
+	@Autowired
+	private ICacheRedis cache;
+
 	@PostConstruct
 	public void seedDataSalas() {
-		List<UserSalaResponse> salas = getAllSalas();
+		List<SalaModel> salas = salaRepository.findAll();
 		if (salas.size() < 1) {
 			for (int i = 0; i < 10; i++) {
 				createSala();
@@ -128,9 +133,19 @@ public class StripesLinkService implements IStripesLinkService {
 
 	@Override
 	public List<UserSalaResponse> getAllSalas() {
-		List<SalaModel> salas = salaRepository.findAll();
+		Map<String, Long> count = cache.get();
+		System.out.println("-----" + count);
 		List<UserSalaResponse> salasDOM = new ArrayList<UserSalaResponse>();
-		salas.forEach((x) -> salasDOM.add(new UserSalaResponse(x.getId(), x.getUsersId().size())));
+		System.out.println("-------------rediss" + count.isEmpty());
+		if (count.isEmpty()) {
+			List<SalaModel> salas = salaRepository.findAll();
+			salas.forEach((x) -> {
+				salasDOM.add(new UserSalaResponse(x.getId(), x.getUsersId().size()));
+				cache.incrementUsers(x.getId());
+			});
+		} else {
+			count.forEach((key, data) -> salasDOM.add(new UserSalaResponse(key, Math.toIntExact(data))));
+		}
 		return salasDOM;
 	}
 
@@ -147,6 +162,7 @@ public class StripesLinkService implements IStripesLinkService {
 			System.out.println("-------------" + userDetails.getUsername());
 			if (sala.getUsersId().contains(user.getId()))
 				throw new StripesLinkException("Usuario ya esta en esta sala");
+			cache.incrementUsers(idSala);
 			sala.getUsersId().add(user.getId());
 			sala.getTableros().get(sala.getCurrentTablero()).usersId.add(user.getId());
 			int newTablero = (sala.getCurrentTablero() == 0) ? 1 : 0;
@@ -306,15 +322,15 @@ public class StripesLinkService implements IStripesLinkService {
 				if (t.getUsersId().contains(user.getId())) {
 					int num = (t.getColor().equals("Azul") ? 0 : 1);
 					List<String> users = t.getUsersId();
-					if (users.size()==1) {
+					if (users.size() == 1) {
 						sala.setTematica(null);
 						sala.getTableros().get(0).setPintor(null);
 						sala.getTableros().get(1).setPintor(null);
 						sala.getTableros().get(0).setPalabra(null);
 						sala.getTableros().get(1).setPalabra(null);
 					}
-					
 					users.remove(user.getId());
+					cache.decrementtUsers(idSala);
 					t.setUsersId(users);
 					List<Tablero> tableros = sala.getTableros();
 					tableros.remove(num);
@@ -326,7 +342,7 @@ public class StripesLinkService implements IStripesLinkService {
 			}
 
 			List<String> users = sala.getUsersId();
-			
+
 			users.remove(user.getId());
 			sala.setUsersId(users);
 			salaRepository.save(sala);
