@@ -306,6 +306,14 @@ public class StripesLinkService implements IStripesLinkService {
 				if (t.getUsersId().contains(user.getId())) {
 					int num = (t.getColor().equals("Azul") ? 0 : 1);
 					List<String> users = t.getUsersId();
+					if (users.size()==1) {
+						sala.setTematica(null);
+						sala.getTableros().get(0).setPintor(null);
+						sala.getTableros().get(1).setPintor(null);
+						sala.getTableros().get(0).setPalabra(null);
+						sala.getTableros().get(1).setPalabra(null);
+					}
+					
 					users.remove(user.getId());
 					t.setUsersId(users);
 					List<Tablero> tableros = sala.getTableros();
@@ -318,6 +326,7 @@ public class StripesLinkService implements IStripesLinkService {
 			}
 
 			List<String> users = sala.getUsersId();
+			
 			users.remove(user.getId());
 			sala.setUsersId(users);
 			salaRepository.save(sala);
