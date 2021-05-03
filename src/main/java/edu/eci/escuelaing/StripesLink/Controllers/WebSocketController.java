@@ -61,12 +61,13 @@ public class WebSocketController {
 		int users = 0;
 		try {
 			users = service.getUsersSala(idSala);
-			Ronda r = service.getRound(idSala);
-			if (msg.equals("Connect")) {
+			String palabra = msg.replace('"', ' ').trim();
+			if (palabra.equals("Connect")) {
 				if (users >= 2) {
+					Ronda r = service.getRound(idSala);
 					msgt.convertAndSend("/topic/Sala." + idSala, r);
 				}
-			} else if (msg.equals("Disconect")) {
+			} else if (palabra.equals("Disconnect")) {
 				if (users < 2) {
 					msgt.convertAndSend("/topic/Sala." + idSala, "");
 				}
