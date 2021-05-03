@@ -63,12 +63,12 @@ public class WebSocketController {
 			users = service.getUsersSala(idSala);
 			Ronda r = service.getRound(idSala);
 			if (msg.equals("Connect")) {
-				if (users == 2) {
+				if (users >= 2) {
 					msgt.convertAndSend("/topic/Sala." + idSala, r);
 				}
 			} else if (msg.equals("Disconect")) {
 				if (users < 2) {
-					msgt.convertAndSend("/topic/Sala." + idSala);
+					msgt.convertAndSend("/topic/Sala." + idSala, "");
 				}
 			}
 		} catch (StripesLinkException e) {
