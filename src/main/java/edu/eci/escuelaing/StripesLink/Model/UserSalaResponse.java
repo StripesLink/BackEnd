@@ -1,6 +1,6 @@
 package edu.eci.escuelaing.StripesLink.Model;
 
-public class UserSalaResponse {
+public class UserSalaResponse implements Comparable< UserSalaResponse >{
 	private String idSala;
 	private int numUsers;
 
@@ -27,4 +27,9 @@ public class UserSalaResponse {
 	public void setNumUsers(int numUsers) {
 		this.numUsers = numUsers;
 	}
+	
+	@Override
+    public int compareTo(UserSalaResponse o) {
+        return this.getIdSala().compareTo(o.getIdSala());
+    }
 }

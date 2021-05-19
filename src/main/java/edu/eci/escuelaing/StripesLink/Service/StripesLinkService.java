@@ -2,6 +2,8 @@ package edu.eci.escuelaing.StripesLink.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -139,6 +141,7 @@ public class StripesLinkService implements IStripesLinkService {
 		System.out.println("-------------rediss" + count.isEmpty());
 		if (count.isEmpty()) {
 			List<SalaModel> salas = salaRepository.findAll();
+			int cont = 1;
 			salas.forEach((x) -> {
 				salasDOM.add(new UserSalaResponse(x.getId(), x.getUsersId().size()));
 				cache.incrementUsers(x.getId());
@@ -146,6 +149,7 @@ public class StripesLinkService implements IStripesLinkService {
 		} else {
 			count.forEach((key, data) -> salasDOM.add(new UserSalaResponse(key, Math.toIntExact(data))));
 		}
+		Collections.sort(salasDOM);
 		return salasDOM;
 	}
 
