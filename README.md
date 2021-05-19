@@ -24,22 +24,17 @@ Para ver el manual de uso clickee la siguiente imagen
 ![](img/UseCase1.png)
 ![](img/UseCase2.png)
 ## Diagrama de clases
+![](img/DiagramaDeClases.png)
 
 ## Diagramas de secuencia
 ![](img/crearJuego.png)
 ![](img/mensaje.png)
-
-## Diagrama de paquetes
 
 ## Diagrama entidad relacion
 ![](img/EntidadRelacion.png)
 
 ## Diagrama de componentes
 ![](img/ComponentDiagram.png)
-
-## Diagrama de despliegue
-
-
 
 ## Autores
 * **Johann Steven Bogotá Vélez**  - Escuela Colombiana de Ingeniería Julio Garavito
