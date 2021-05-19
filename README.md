@@ -15,16 +15,22 @@ Para ver el manual de uso clickee la siguiente imagen
 
 
 ## Casos de uso
-
+![](img/UseCase0.png)
+![](img/UseCase1.png)
+![](img/UseCase2.png)
 ## Diagrama de clases
 
 ## Diagramas de secuencia
+![](img/crearJuego.png)
+![](img/mensaje.png)
 
 ## Diagrama de paquetes
 
 ## Diagrama entidad relacion
+![](img/EntidadRelacion.png)
 
 ## Diagrama de componentes
+![](img/ComponentDiagram.png)
 
 ## Diagrama de despliegue
 
