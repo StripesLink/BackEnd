@@ -9,7 +9,7 @@
 StripesLink es un juego basado en la idea clásica de punturillo2 con unas variaciones. El juego consiste en la formación de 2 equipos las cuales están conformados en su totalidad por mínimo 4 jugadores por partida. estos se dividen el rol y las responsabilidades de dibujar y adivinar una palabra. El equipo que adivine primero la palabra que se esta dibujando en pantalla. Gana La Ronda.
 
  ## Manual de Usuario
-para ver el manual de uso clickee la siguiente imagen
+Para ver el manual de uso clickee la siguiente imagen
 
 [![](img/manual.jpg)](https://stripeslink.gitbook.io/stripeslink-manual-de-uso/)
 
