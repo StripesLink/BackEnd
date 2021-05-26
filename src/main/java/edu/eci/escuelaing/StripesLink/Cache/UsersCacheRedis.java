@@ -41,9 +41,8 @@ public class UsersCacheRedis implements ICacheRedis {
 	@Override
 	public void decrementtUsers(String idSala) {
 		Long valor = hashOperations.get(Key, idSala);
-		if (valor == null) {
+		if (valor != null) {
 			hashOperations.put(Key, idSala, valor - 1L);
-			//hashOperations.increment(Key, idSala, -1);
 		}
 	}
 
