@@ -375,7 +375,7 @@ public class StripesLinkService implements IStripesLinkService {
 			SalaModel sala = m.get();
 			Ronda ronda = cache.getState(idSala);
 			String palabraFound = (equipo.equals("Azul")) ? ronda.getPalabraAzul(): ronda.getPalabraRojo();
-			if (palabraFound.equals(palabra)) {
+			if (palabraFound.toLowerCase().equals(palabra)) {
 				return true;
 			}
 			return false;

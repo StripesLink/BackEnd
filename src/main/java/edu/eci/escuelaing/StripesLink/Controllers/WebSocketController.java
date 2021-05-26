@@ -40,7 +40,7 @@ public class WebSocketController {
 	@MessageMapping("/chat.{idSala}.{equipo}")
 	public void handleChatEvent(String msg, @DestinationVariable String idSala, @DestinationVariable String equipo,
 			Principal p) throws Exception {
-		String palabra = msg.replace('"', ' ').trim();
+		String palabra = msg.replace('"', ' ').trim().toLowerCase();
 		System.out.println("Nueva conexion a la sala-chat:" + idSala);
 		if (service.findWordSala(idSala, equipo, palabra)) {
 			System.out.println("Gano usuario" + p.getName());
