@@ -373,14 +373,14 @@ public class StripesLinkService implements IStripesLinkService {
 		Optional<SalaModel> m = salaRepository.findById(idSala);
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
-			Tablero tablero = (sala.getTableros().get(0).getColor().equals(equipo)) ? sala.getTableros().get(0)
-					: sala.getTableros().get(1);
-			if (tablero.getPalabra().equals(palabra)) {
+			Ronda ronda = cache.getState(idSala);
+			String palabraFound = (equipo.equals("Azul")) ? ronda.getPalabraAzul(): ronda.getPalabraRojo();
+			if (palabraFound.equals(palabra)) {
 				return true;
 			}
 			return false;
 		} else {
-			throw new StripesLinkException("Tematica no existe");
+			throw new StripesLinkException("Sala no existe");
 		}
 	}
 
