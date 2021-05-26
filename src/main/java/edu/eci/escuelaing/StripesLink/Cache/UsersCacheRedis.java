@@ -8,18 +8,23 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import edu.eci.escuelaing.StripesLink.Model.Ronda;
+
 @Repository
 public class UsersCacheRedis implements ICacheRedis {
 
 	public static final String Key = "edu:eci:escuelaing:StripesLink:User";
+	public static final String Key2 = "edu:eci:escuelaing:StripesLink:Game";
 
 	private HashOperations<String, String, Long> hashOperations;
+	private HashOperations<String, String, Ronda> hashOperations2;
 
 	private RedisTemplate redisTemplate;
 
 	public UsersCacheRedis(RedisTemplate redisTemplate) {
 		this.redisTemplate = redisTemplate;
 		this.hashOperations = this.redisTemplate.opsForHash();
+		this.hashOperations2 = this.redisTemplate.opsForHash();
 	}
 
 	@Override
@@ -30,11 +35,6 @@ public class UsersCacheRedis implements ICacheRedis {
 			hashOperations.put(Key, idSala, 0L);
 		} else {
 			hashOperations.put(Key, idSala, valor + 1L);
-			/*
-			 * System.out.println("----Entrooo2"); System.out.println("-------HashValue:" +
-			 * hashOperations.get(Key, idSala).getClass()); hashOperations.increment(Key,
-			 * idSala, 1); System.out.println("-------Saliooooooo");
-			 */
 		}
 	}
 
@@ -47,12 +47,17 @@ public class UsersCacheRedis implements ICacheRedis {
 	}
 
 	@Override
-	public Map<String, Long> get() {
+	public Map<String, Long> getUsers() {
 		return hashOperations.entries(Key);
 	}
 
-	private String getKey(String idSala) {
-		return String.format("%s:%s", Key, idSala);
+	@Override
+	public void setState(Ronda ronda, String idSala) {
+		hashOperations2.put(Key2, idSala, ronda);
 	}
 
+	@Override
+	public Ronda getState(String idSala) {
+		return hashOperations2.get(Key2, idSala);
+	}
 }

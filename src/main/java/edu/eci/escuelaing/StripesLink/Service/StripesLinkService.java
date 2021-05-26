@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators.Round;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -135,7 +136,7 @@ public class StripesLinkService implements IStripesLinkService {
 
 	@Override
 	public List<UserSalaResponse> getAllSalas() {
-		Map<String, Long> count = cache.get();
+		Map<String, Long> count = cache.getUsers();
 		System.out.println("-----" + count);
 		List<UserSalaResponse> salasDOM = new ArrayList<UserSalaResponse>();
 		System.out.println("-------------rediss" + count.isEmpty());
@@ -327,14 +328,10 @@ public class StripesLinkService implements IStripesLinkService {
 					int num = (t.getColor().equals("Azul") ? 0 : 1);
 					List<String> users = t.getUsersId();
 					if (users.size() <= 1) {
-						
+						cache.setState(null, idSala);
 						sala.setTematica(null);
-						sala.getTableros().get(0).setLineas(null);
-						sala.getTableros().get(1).setLineas(null);
-						sala.getTableros().get(0).setPintor(null);
-						sala.getTableros().get(1).setPintor(null);
-						sala.getTableros().get(0).setPalabra(null);
-						sala.getTableros().get(1).setPalabra(null);
+						sala.getTableros().get(0).setLineas(new ArrayList<Line>());
+						sala.getTableros().get(1).setLineas(new ArrayList<Line>());
 					}
 					users.remove(user.getId());
 					cache.decrementtUsers(idSala);
@@ -347,7 +344,6 @@ public class StripesLinkService implements IStripesLinkService {
 					break;
 				}
 			}
-
 			List<String> users = sala.getUsersId();
 
 			users.remove(user.getId());
@@ -421,12 +417,11 @@ public class StripesLinkService implements IStripesLinkService {
 		if (m.isPresent()) {
 			SalaModel sala = m.get();
 			String nameTematica, palabraAzul, palabraRojo, pintorAzul, pintorRojo = null;
-			if (sala.getTematica() != null) {
-				nameTematica = sala.getTematica();
-				palabraAzul = sala.getTableros().get(0).getPalabra();
-				palabraRojo = sala.getTableros().get(1).getPalabra();
-				pintorAzul = sala.getTableros().get(0).getPintor();
-				pintorRojo = sala.getTableros().get(1).getPintor();
+			Ronda ronda = cache.getState(idSala);
+			System.out.print("-------cacheeeee afueraaaaa");
+			if (ronda != null) {
+				System.out.print("-------cacheeeee" + ronda.getNameTematica());
+				return ronda;
 			} else {
 				try {
 					nameTematica = chooseTematica();
@@ -434,21 +429,13 @@ public class StripesLinkService implements IStripesLinkService {
 					palabraRojo = chooseWordTematica(nameTematica);
 					pintorAzul = getPintorSala(idSala, "Azul");
 					pintorRojo = getPintorSala(idSala, "Rojo");
-					List<Tablero> tableros = sala.getTableros();
-					Tablero t1 = tableros.get(0);
-					Tablero t2 = tableros.get(1);
-					t1.setPalabra(palabraAzul);
-					t2.setPalabra(palabraRojo);
-					t1.setPintor(pintorAzul);
-					t2.setPintor(pintorRojo);
-					sala.setTematica(nameTematica);
-					salaRepository.save(sala);
 				} catch (StripesLinkException e) {
 					throw new StripesLinkException("La sala debe tener por lo menos dos jugadores");
 				}
 			}
-			return new Ronda(nameTematica, pintorAzul, pintorRojo, palabraAzul, palabraRojo);
-
+			ronda = new Ronda(nameTematica, pintorAzul, pintorRojo, palabraAzul, palabraRojo);
+			cache.setState(ronda, idSala);
+			return ronda;
 		} else {
 			throw new StripesLinkException("Sala no existe");
 		}
@@ -460,12 +447,10 @@ public class StripesLinkService implements IStripesLinkService {
 			Optional<SalaModel> m = salaRepository.findById(idSala);
 			if (m.isPresent()) {
 				SalaModel sala = m.get();
-				sala.setTematica(null);
-				sala.getTableros().get(0).setPintor(null);
-				sala.getTableros().get(1).setPintor(null);
-				sala.getTableros().get(0).setPalabra(null);
-				sala.getTableros().get(0).setPalabra(null);
+				sala.getTableros().get(0).setLineas(new ArrayList<Line>());
+				sala.getTableros().get(1).setLineas(new ArrayList<Line>());
 				salaRepository.save(sala);
+				cache.setState(null, idSala);
 				return getRound(idSala);
 			} else {
 				throw new StripesLinkException("No existe la sala");

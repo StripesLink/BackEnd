@@ -1,6 +1,10 @@
 package edu.eci.escuelaing.StripesLink.Model;
 
-public class Ronda {
+import java.io.Serializable;
+
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+
+public class Ronda extends JdkSerializationRedisSerializer implements Serializable {
 	private String nameTematica;
 	private String pintorAzul;
 	private String pintorRojo;
